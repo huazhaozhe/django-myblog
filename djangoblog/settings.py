@@ -27,7 +27,7 @@ import socket
 if socket.gethostbyname(socket.gethostname())[:3] == '192':
     DEBUG = TEMPLATE_DEBUG = True
 else:
-    DEBUG = TEMPLATE_DEBUG = True
+    DEBUG = TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
