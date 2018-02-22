@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+<title>Note - ZheBlog</title>
+{% endblock title %}
+
+{% block header %}
+{% include 'nav-note.html' %}
+{% include 'side-nav.html' %}
+{% endblock header %}
+
+{% block main %}
+<link href="{% static 'note/style.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+    <div class="section no-pad-bot">
+        <div id="masonry-grid" class="row">
+
+            {% for note in note_list %}
+            {% if note.visible or note.author == user or user.is_superuser %}
+
+                <div class="col s6 m4">
+                    <div class="card hoverable">
+
+                        {% if note.image_url %}
+                        
+                            <div class="card-image">
+                                <img class="activator" src="{{ note.image_url }}">
+                            </div>
+
+                        {% endif %}
+                        {% if note.title %}
+
+                            <div class="card-content">
+                                <span class="card-title">{{ note.title }}</span>
+                            </div>
+
+                        {% endif %}
+
+                        <div class="card-action">
+                            <a href="{% url 'note:like' note.pk %}">
+                                <i class="material-icons" style="vertical-align:middle;">thumb_up</i>
+                                <span style="vertical-align:middle;">{{ note.likes }}</span>
+                            </a>
+
+                            {% if user == note.author or user.is_superuser %}
+
+                                <a href="{% url 'note:note_visible' note.pk %}" alt="可见性">
+                                    {% if note.visible %}
+                                    <i class="material-icons" style="vertical-align:middle;">visibility</i>
+                                    {% else %}
+                                    <i class="material-icons" style="vertical-align:middle;">visibility_off</i>
+                                    {% endif %}
+                                </a>
+                                <a href="{% url 'note:note_edit' note.pk %}">
+                                    <i class="material-icons" style="vertical-align:middle;">mode_edit</i>
+                                </a>
+                                <a href="{% url 'note:note_delete' note.pk %}">
+                                    <i class="material-icons" style="vertical-align:middle;">delete</i>
+                                </a>
+
+                            {% endif %}
+
+                            <a>
+                                <i class="material-icons" style="vertical-align:middle;">account_circle</i>
+                                <span style="vertical-align:middle;">{{ note.author }}</span>
+                            </a>
+
+                        </div>
+                        <div class="card-reveal">
+                            <span class="card-title grey-text text-darken-4">
+                                {{ note.title }}
+                                <i class="material-icons right">close</i>
+                            </span>
+                            <p>{{ note.content|safe }}</p>
+                        </div>
+                    </div>
+                </div>
+
+            {% endif %}
+        {% endfor %}
+
+    </div>
+</div>
+
+{% include 'pagination.html' %}
+
+
+<div class="fixed-action-btn horizontal">
+    <a class="btn-floating btn-large red">
+        <i class="large material-icons">account_balance</i>
+    </a>
+    <ul>
+        <li><a class="btn-floating" href="{% url 'home:home' %}"><i class="material-icons">home</i></a></li>
+        <li><a class="btn-floating blue" href="{% url 'blog:index' %}"><i class="material-icons">import_contacts</i></a></li>
+
+        {% if user.is_authenticated %}
+
+            <li><a class="btn-floating red" href="{% url 'note:note_edit' %}"><i class="material-icons">add</i></a></li>
+            <li>
+                <a class="btn-floating yellow darken-1" href="{% url 'account:logout' %}">
+                    <i class="material-icons">exit_to_app</i>
+                </a>
+            </li>
+
+        {% else %}
+
+            <li>
+                <a class="btn-floating green" href="{% url 'account:login' %}">
+                    <i class="material-icons">account_circle</i>
+                </a>
+            </li>
+
+        {% endif %}
+
+    </ul>
+</div>
+
+
+<script src="{% static 'note/masonry.pkgd.min.js' %}"></script>
+<script src="{% static 'note/init.js' %}"></script>
+
+
+{% endblock main %}
+
+{% block footer %}
+{% include 'footer.html' %}
+{% endblock footer %}

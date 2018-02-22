@@ -1,0 +1,31 @@
+<ul id="dropdown1" class="dropdown-content">
+    <li><a href="{% url 'account:logout' %}?next={{ request.path }}">注销</a></li>
+</ul>
+
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper">
+            <ul id="nav-mobile" class="left hide-on-med-and-down">
+                <li>
+                    <a href="#" data-activates="slide-out" class="btn-button-collapse"><i class="material-icons">menu</i></a>
+                </li>
+            </ul>
+            <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                {% if user.is_authenticated %}
+                <li>
+                    <a class="dropdown-button" href="#!" data-activates="dropdown1">
+                        {% if user.nickname %} {{ user.nickname }} {% else %} {{ user.username }} {% endif %}
+                        <i class="material-icons right">arrow_drop_down</i>
+                    </a>
+                </li>
+                {% else %}
+                <li>
+                    <a href="{% url 'account:login' %}?next={{ request.path }}">登录</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</div>
+

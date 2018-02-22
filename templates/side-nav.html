@@ -1,0 +1,166 @@
+      
+{% load staticfiles %}
+{% load blog_extras %}
+<ul id="slide-out" class="side-nav">
+    <li>
+        <div class="userView">
+            <div class="background">
+                <img src="{% static 'images/master_background.jpg' %}">
+            </div>
+            <a href="{% url 'home:about' %}"><img class="circle" src="{% static 'images/master.jpg' %}"></a>
+            <a href="{% url 'home:about' %}"><span class="white-text name">者</span></a>
+            <a href="mailto:tasker@huazhaozhe.info"><span class="white-text email">tasker@huazhaozhe.info</span></a>
+        </div>
+    </li>
+    <li class="bold ">
+        <a href="{% url 'home:home' %}" class="waves-effect waves-teal"><i class="material-icons">home</i>Home</a>
+    </li>
+    <li class="bold ">
+        <a href="{% url 'blog:index' %}" class="waves-effect waves-teal">
+            <i class="material-icons">import_contacts</i>
+            Blog
+        </a>
+    </li>
+    <li class="bold ">
+        <a href="{% url 'note:index' %}" class="waves-effect waves-teal"><i class="material-icons">note</i>Note
+        </a>
+    </li>
+    <li>
+        <div class="divider"></div>
+    </li>
+    <li class="no-padding">
+        <ul class="collapsible collapsible-accordion">
+            {% if user.is_superuser %}
+            {% get_future as future_post_list %}
+            <li class="bold active">
+                <a class="collapsible-header active waves-effect waves-teal">
+                    <i class="material-icons">flag</i>
+                    即将发布
+                    <span class="new badge red" data-badge-caption="#">{{ future_post_list|length }}</span>
+                </a>
+                <div class="collapsible-body">
+                    <ul>
+                        {% for post in future_post_list %}
+                        <li>
+                            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                        </li>
+                        {% empty %}
+                        <li>没有即将发布post</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </li>
+            {% get_recent 'blog' as recent_post_list %}
+            <li class="bold">
+                <a class="collapsible-header  waves-effect waves-teal">
+                    <i class="material-icons">timeline</i>
+                    最近发布
+                    <span class="new badge red" data-badge-caption="#">{{ recent_post_list|length }}</span>
+                </a>
+                <div class="collapsible-body">
+                    <ul>
+                        {% for post in recent_post_list %}
+                        <li>
+                            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                        </li>
+                        {% empty %}
+                        <li>最近没有post</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </li>
+            {% else %}
+            {% get_recent 'blog' as recent_post_list %}
+            <li class="bold active">
+                <a class="collapsible-header active waves-effect waves-teal">
+                    <i class="material-icons">timeline</i>
+                    最近发布
+                    <span class="new badge red" data-badge-caption="#">{{ recent_post_list|length }}</span>
+                </a>
+                <div class="collapsible-body">
+                    <ul>
+                        {% for post in recent_post_list %}
+                        <li>
+                            <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                        </li>
+                        {% empty %}
+                        <li>最近没有post</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </li>
+            {% endif %}
+            {% get_categories 'blog' as category_list %}
+            <li class="bold ">
+                <a class="collapsible-header   waves-effect waves-teal">
+                    <i class="material-icons">view_list</i>
+                    分类
+                    <span class="new badge red" data-badge-caption="#">{{ category_list|length }}</span>
+                </a>
+                <div class="collapsible-body">
+                    <ul>
+                        {% for category in category_list %}
+                        <li>
+                            <a href="{% url 'blog:category' category.pk %}">
+                                {{ category.name }}
+                                <span class="new badge blue" data-badge-caption="#">{{ category.num }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </li>
+            {% get_tags 'blog' as tag_list %}
+            <li class="bold ">
+                <a class="collapsible-header  waves-effect waves-teal">
+                    <i class="material-icons">view_quilt</i>
+                    标签
+                    <span class="new badge red" data-badge-caption="#">{{ tag_list|length }}</span>
+                </a>
+                <div class="collapsible-body">
+                    {% for tag in tag_list %}
+                    <div class="chip">
+                        <a href="{% url 'blog:tag' tag.pk %}">{{ tag.name }}({{ tag.num }})</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </li>
+            {% get_archives 'blog' as date_list %}
+            <li class="bold ">
+                <a class="collapsible-header  waves-effect waves-teal">
+                    <i class="material-icons">av_timer</i>
+                    归档
+                    <span class="new badge red" data-badge-caption="#">{{ date_list|length }}</span>
+                </a>
+                <div class="collapsible-body">
+                    <ul>
+                        {% for date in date_list %}
+                        <li>
+                            <a href="{% url 'blog:archives' date.date.year date.date.month %}">
+                                {{ date.date.year }} 年{{ date.date.month }} 月
+                                <span class="new badge blue" data-badge-caption="#">{{ date.num }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+
+<script>
+$(document).ready(function(){
+    $('.collapsible').collapsible();
+});
+$('.btn-button-collapse').sideNav();
+$('.button-collapse').sideNav();
+  //$('.button-collapse').sideNav({
+   //   menuWidth: 250, // Default is 240
+   //   closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+   //   draggable: true // Choose whether you can drag to open on touch screens
+   // }
+  //);
+</script>
+

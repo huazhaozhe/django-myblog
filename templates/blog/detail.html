@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>{{ post.title }} - ZheBlog</title>
+{% endblock title %}
+
+{% block style %}
+    header, main, footer {
+        padding-left: 300px;
+    }
+
+    @media only screen and (max-width : 992px) {
+        header, main, footer {
+            padding-left: 0;
+        }
+    }
+    html{
+        height: 100%;
+    }
+    body {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+    }
+
+    main {
+        flex: 1 0 auto;
+    }
+{% endblock style %}
+
+{% block header %}
+{% include 'nav-blog.html' %}
+{% include 'side-nav-fixed.html' %}
+{% endblock header %}
+
+{% block main %}
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+<br>
+<div class="row" style="margin-left: 30px;">
+    <div class="col s12 m9 l10">
+        <div class="card hoverable">
+            <div class="card-content">
+                    <h4 class="header center">{{ post.title }}</h4>
+                    <div class="divider"></div>
+                    <br>
+                    <div class="container center">
+                        <i class="material-icons" style="vertical-align:middle;">visibility</i>
+                        <span style="vertical-align:middle;">{{ post.views }}</span>
+                        <i class="material-icons" style="vertical-align:middle;">message</i>
+                        <span style="vertical-align:middle;">{{ post.comment_set.all.count }}</span>
+                        <i class="material-icons" style="vertical-align:middle;">schedule</i>
+                        <span style="vertical-align:middle;">{{ post.created_time }}</span>
+                        <i class="material-icons" style="vertical-align:middle;">account_circle</i>
+                        <span style="vertical-align:middle;">{{ post.author }}</span>
+                    </div>
+                    <br>
+                <div class="divider"></div>
+                <br>
+                <div id="body">
+                    {{ post.body|safe }}
+                </div>
+            </div>
+            <div class="card-action">
+
+                {% if user.is_superuser %}
+                    <a href="{% url 'blog:post_edit' post.pk %}">
+                        <i class="material-icons" style="vertical-align:middle;">mode_edit</i>
+                    </a>
+                    <a href="{% url 'blog:post_delete' post.pk %}">
+                        <i class="material-icons" style="vertical-align:middle;">delete</i>
+                    </a>
+                {% endif %}
+                {% if post.category %}
+                    <a href="{% url 'blog:category' post.category.pk %}">
+                        <i class="material-icons" style="vertical-align:middle;">view_list</i>
+                        <span style="vertical-align:middle;">{{ post.category.name }}</span>
+                    </a>
+                {% endif %}
+
+                {% if post.tags.all %}
+                {% for tag in post.tags.all %}
+                <a href="{% url 'blog:tag' tag.pk %}">
+                    <div class="chip">
+                        <span style="color: #ffa000;">{{ tag.name }}</span>
+                    </div>
+                </a>
+                {% endfor %}
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+    <div class="col hide-on-small-only m3 l2">
+        <div class="toc-wrapper pinned">
+            <div style="height: 1px;">
+                <ul class="section table-of-contents"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if post.comment_enabled or user.is_superuser %}
+{% include 'comments.html' %}
+{% else %}
+没有开放评论
+{% endif %}
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+<script>
+function find_anchor(){
+    var a = $('a[id]');
+    var b = '';
+    for (var i=0;i<a['length'];i++){
+        if (a[i].id == a[i].name){
+            b+='<li><a href="#'+ a[i].id+ '">'+a[i].text+'</a></li>';
+        }
+    }
+    return b;
+}
+$(document).ready(function(){
+    $('.scrollspy').scrollSpy();
+    list = find_anchor();
+    $('.table-of-contents').append(list);
+});
+</script>
+
+{% endblock main %}
+
+{% block footer %}
+{% include 'footer.html' %}
+{% endblock footer %}

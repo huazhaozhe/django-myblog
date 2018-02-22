@@ -1,0 +1,31 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+<title>About - ZheBlog</title>
+{% endblock title %}
+
+
+{% block header %}
+{% include 'nav-home.html' %}
+{% include 'side-nav.html' %}
+{% endblock header %}
+
+{% block main %}
+<br>
+<br>
+<div class="container">
+    <div class="row"> 
+          <div class="card hoverable">
+              <div class="card-content"> 
+                  {{ about|safe }}
+                  </div>
+              </div>
+    </div>
+    </div>
+<br>
+<br>
+{% endblock main %}
+{% block footer %}
+{% include 'footer.html' %}
+{% endblock footer %}

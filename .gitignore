@@ -1,0 +1,11 @@
+*.py[cod]
+*.pyc
+*.so
+*.egg
+__pycache__/
+*.sqlite3
+migrations/
+log/
+whoosh_index/
+collected_static/
+config.py

@@ -1,0 +1,160 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Blog - ZheBlog</title>
+{% endblock title %}
+
+{% block style %}
+    header, main, footer {
+        padding-left: 300px;
+    }
+
+    @media only screen and (max-width : 992px) {
+        header, main, footer {
+            padding-left: 0;
+        }
+    }
+    html{
+        height: 100%;
+    }
+    body {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+    }
+    main {
+        flex: 1 0 auto;
+    }
+{% endblock style %}
+
+{% block header %}
+{% include 'nav-blog.html' %}
+{% include 'side-nav-fixed.html' %}
+{% endblock header %}
+
+{% block main %}
+
+<br>
+<div class="container">
+    <div class="row">
+
+        {% for post in post_list %}
+        {% if post.visible and post.status == 1 or user.is_superuser %}
+
+            <div class="row">
+                <div class="col s12">
+                    <div class="card hoverable">
+                        <div class="card-content">
+                            <span class="card-title">{{ post.title }}</span>
+                            <span>{{ post.excerpt|safe }}</span>
+                            <a class="btn-floating btn-large halfway-fab waves-effect waves-light red" href="{{ post.get_absolute_url }}">
+                                <i class="material-icons">chrome_reader_mode</i>
+                            </a>   
+                        </div>
+
+                        <div class="card-action">
+
+                            {% if user.is_superuser %}
+
+                                <a href="{% url 'blog:post_edit' post.pk %}">
+                                    <i class="material-icons" style="vertical-align:middle;">mode_edit</i>
+                                </a>
+                                <a href="{% url 'blog:post_delete' post.pk %}">
+                                    <i class="material-icons" style="vertical-align:middle;">delete</i>
+                                </a>
+
+                            {% endif %}
+
+                            <a><i class="material-icons" style="vertical-align:middle;">visibility</i>
+                                <span style="vertical-align:middle;">{{ post.views }}</span>
+                            </a>
+                            <a><i class="material-icons" style="vertical-align:middle;">message</i>
+                                <span style="vertical-align:middle;">{{ post.comment_set.all.count }}</span>
+                            </a>
+                            <a><i class="material-icons" style="vertical-align:middle;">schedule</i>
+                                <span style="vertical-align:middle;">{{ post.created_time }}</span>
+                            </a>
+
+                            {% if post.category %}
+                                <a href="{% url 'blog:category' post.category.pk %}">
+                                    <i class="material-icons" style="vertical-align:middle;">view_list</i>
+                                    <span style="vertical-align:middle;">{{ post.category.name }}</span>
+                                </a>
+                            {% endif %}
+
+                            {% if post.tags.all %}
+                            {% for tag in post.tags.all %}
+                            <a href="{% url 'blog:tag' tag.pk %}">
+                                <div class="chip">
+                                    <span style="color: #ffa000;">{{ tag.name }}</span>
+                                </div>
+                            </a>
+                            {% endfor %}
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {% endif %}
+        {% empty %}
+
+            <div class="row">
+                <div class="col s12">
+                    <div class="card-panel teal">
+                        <span class="white-text">没有Post</span>
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+
+        {% include 'pagination.html' %}
+
+    </div>
+</div>
+
+
+<div class="fixed-action-btn horizontal">
+    <a class="btn-floating btn-large red">
+        <i class="large material-icons">account_balance</i>
+    </a>
+    <ul>
+        <li><a class="btn-floating" href="{% url 'home:home' %}"><i class="material-icons">home</i></a></li>
+        <li><a class="btn-floating blue" href="{% url 'note:index' %}"><i class="material-icons">note</i></a></li>
+
+        {% if user.is_superuser %}
+
+            <li><a class="btn-floating red" href="{% url 'blog:post_edit' %}"><i class="material-icons">add</i></a></li>
+
+        {% endif %}
+
+        {% if user.is_authenticated %}
+
+            <li>
+                <a class="btn-floating yellow darken-1" href="{% url 'account:logout' %}">
+                    <i class="material-icons">exit_to_app</i>
+                </a>
+            </li>
+
+        {% else %}
+
+            <li>
+                <a class="btn-floating green" href="{% url 'account:login' %}">
+                    <i class="material-icons">account_circle</i>
+                </a>
+            </li>
+
+        {% endif %}
+
+    </ul>
+</div>
+
+
+{% endblock main %}
+
+{% block footer %}
+{% include 'footer.html' %}
+{% endblock footer %}

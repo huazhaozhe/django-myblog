@@ -1,0 +1,124 @@
+   
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+{% block title %}
+<title>Home</title>
+{% endblock title %}
+
+{% block header %}
+
+{% include 'nav-home.html' %}
+{% include 'side-nav.html' %}
+
+{% endblock header %}
+
+{% block main %}
+<style>
+    #index-banner {
+      height: 100%;
+    }
+</style>
+
+  <div id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <br><br>
+        <h2 class="header center teal-text text-lighten-2">Zhe Blog</h2>
+        <div class="row center">
+          <h5 class="header col s12 light">God helps those who help themselves</h5>
+        </div>
+        <div class="row center">
+            <a href="{% url 'blog:index' %}" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">Get Started</a>
+        </div>
+        <br><br>
+
+      </div>
+    </div>
+    <div class="parallax"><img src="{% static 'images/background1.jpg' %}" alt="Unsplashed background img 1"></div>
+  </div>
+
+
+  <div class="container">
+    <div class="section">
+
+      <!--   Icon Section   -->
+      <div class="row">
+        <div class="col s12 m4">
+        <a href="{% url 'blog:index' %}">
+          <div class="card">
+              <div class="card-image">
+                <div class="icon-block">
+            <h2 class="center brown-text"><i class="material-icons">import_contacts</i></h2>
+            <h5 class="center">Blog</h5>
+          </div>
+              <img src="{% static 'images/blog.svg' %}">
+              <span class="card-title">1</span>
+            </div>
+          </div>
+          </a>
+        </div>
+
+        <div class="col s12 m4">
+        <a href="{% url 'note:index' %}">
+          <div class="card">
+              <div class="card-image">
+                <div class="icon-block">
+            <h2 class="center brown-text"><i class="material-icons">note</i></h2>
+            <h5 class="center">Note</h5>
+          </div>
+              <img src="{% static 'images/note.svg' %}">
+              <span class="card-title">2</span>
+            </div>
+          </div>
+          </a>
+        </div>
+
+        <div class="col s12 m4">
+        <a href="{% url 'home:about' %}">
+          <div class="card">
+              <div class="card-image">
+                <div class="icon-block">
+            <h2 class="center brown-text"><i class="material-icons">info</i></h2>
+            <h5 class="center">About</h5>
+          </div>
+              <img src="{% static 'images/about.svg' %}">
+              <span class="card-title">3</span>
+            </div>
+          </div>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="parallax-container valign-wrapper">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <div class="row center">
+          <h5 class="header col s12 light"></h5>
+        </div>
+      </div>
+    </div>
+    <div class="parallax"><img src="{% static 'images/background2.jpg' %}" alt="Unsplashed background img 2"></div>
+  </div>
+
+
+<script>
+    
+    $(document).ready(function(){
+      $('.parallax').parallax();
+    });
+
+</script>
+{% endblock main %}
+
+{% block footer %}
+{% include 'footer.html' %}
+{% endblock footer %}
+
+

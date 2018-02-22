@@ -1,0 +1,33 @@
+
+{% if is_paginated %}
+
+<div class="row">
+    <div class="col s12 center">
+        <ul class="pagination">
+            <li class="waves-effect"><a href="?page=1"><i class="material-icons">first_page</i></a></li>
+            {% if left_more %}
+            <li class="waves-effect"><a href="?page={{ left_more_num }}"><i class="material-icons">chevron_left</i></a></li>
+            {% else %}
+            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+            {% endif %}
+
+            {% for num in page_list %}
+            {% if num == page_number %}
+            <li class="active"><a href="?page={{ num }}">{{ num }}</a></li>
+            {% else %}
+            <li class="waves-effect"><a href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+
+            {% if right_more %}
+            <li class="waves-effect"><a href="?page={{ right_more_num }}"><i class="material-icons">chevron_right</i></a></li>
+            {% else %}
+            <li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+            {% endif %}
+            <li class="waves-effect"><a href="?page={{ num_pages }}"><i class="material-icons">last_page</i></a></li>
+        </ul>
+    </div>
+</div>
+
+{% endif %}
+

@@ -1,0 +1,31 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+<title>注册</title>
+{% endblock title %}
+
+{% block header %}
+{% include 'nav-home.html' %}
+{% include 'side-nav.html' %}
+{% endblock header %}
+
+{% block main %}
+<div class="container">
+    <br>
+
+    <div class="row">
+        <form class="col s8 push-s2" action="{% url 'account:register' %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <div class="row">
+                <div class="col s12">
+                    <button type="submit" class="waves-effect waves-light btn">注册</button>
+                    &#x3000;have an account? <a href="{% url 'account:login' %}">Log in</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock main %}

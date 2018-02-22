@@ -1,0 +1,37 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="utf-8">
+        {% block title %}
+        {% endblock title %}
+        <link rel="shortcut icon" href="{%　static 'images/favicon.ico' %}">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/materialize.min.css' %}">
+        <script src="{% static 'js/jquery-3.3.1.js' %}"></script>
+        <!--script src="https://code.jquery.com/jquery-2.1.1.min.js"></script-->
+        <script src="{% static 'js/materialize.min.js' %}"></script>
+        <style>
+            {% block style %}
+            {% endblock style %}
+        </style>
+    </head>
+    <body>
+
+        <header>
+            {% block header %}
+            {% endblock header %}
+        </header>
+
+        <main>
+            {% block main %}
+            {% endblock main %}
+        </main>
+
+        {% block footer %}
+        {% endblock footer %}
+
+    </body>
+</html>
+

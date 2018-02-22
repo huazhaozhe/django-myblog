@@ -1,0 +1,131 @@
+
+{% extends 'base.html' %}
+{% load highlight %}
+
+{% block title %}
+<title>Blog搜索 - ZheBlog</title>
+{% endblock title}
+
+{% block style %}
+    header, main, footer {
+        padding-left: 300px;
+    }
+
+    @media only screen and (max-width : 992px) {
+        header, main, footer {
+            padding-left: 0;
+      }
+    }
+    html{
+        height: 100%;
+    }
+    body {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+    }
+
+    main {
+        flex: 1 0 auto;
+    }
+    .highlighted {
+    color:red;
+    }
+{% endblock style %}
+
+{% block header %}
+{% include 'nav-blog.html' %}
+{% include 'side-nav-fixed.html' %}
+{% endblock header %}
+
+{% block main %}
+
+<br>
+<br>
+<div class="container">
+    <div class="row">
+        {% if query %}
+        {% for post in page.object_list %}
+
+        <div class="row">
+            <div class="col s12">
+                <div class="card hoverable">
+                    <div class="card-content">
+                        <span class="card-title">{% highlight post.object.title with query %}</span>
+                        {% if post.object.excerpt %}<span>{{ post.object.excerpt }}</span>{% endif %}
+                        <a class="btn-floating btn-large halfway-fab waves-effect waves-light red" href="{{ post.object.get_absolute_url }}">
+                        <i class="material-icons">chrome_reader_mode</i>
+                        </a>   
+                    </div>
+                    <div class="card-action">
+                        <a href="#"><i class="material-icons" style="vertical-align:middle;">visibility</i><span style="vertical-align:middle;">{{ post.object.views }}</span></a>
+                        {% if user.is_superuser %}
+                        <a href="{% url 'blog:post_edit' post.object.pk %}">编辑</a>
+                        <a href="{% url 'blog:post_delete' post.object.pk %}">删除</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% empty %}
+
+        <div class="row">
+            <div class="col s12">
+                <div class="card-panel teal">
+                    <span class="white-text">没有你搜索的Post</span>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+        {% else %}
+
+        </h5>请输入搜索的关键词</h5>
+
+        {% endif %}
+        {% include 'pagination.html' %}
+
+    </div>
+</div>
+
+<div class="fixed-action-btn horizontal">
+    <a class="btn-floating btn-large red">
+        <i class="large material-icons">account_balance</i>
+    </a>
+    <ul>
+        <li><a class="btn-floating" href="{% url 'home:home' %}"><i class="material-icons">home</i></a></li>
+        <li><a class="btn-floating blue" href="{% url 'note:index' %}"><i class="material-icons">note</i></a></li>
+
+        {% if user.is_superuser %}
+
+            <li><a class="btn-floating red" href="{% url 'blog:post_edit' %}"><i class="material-icons">add</i></a></li>
+
+        {% endif %}
+
+        {% if user.is_authenticated %}
+
+            <li>
+                <a class="btn-floating yellow darken-1" href="{% url 'account:logout' %}">
+                    <i class="material-icons">exit_to_app</i>
+                </a>
+            </li>
+
+        {% else %}
+
+            <li>
+                <a class="btn-floating green" href="{% url 'account:login' %}">
+                    <i class="material-icons">account_circle</i>
+                </a>
+            </li>
+
+        {% endif %}
+
+    </ul>
+</div>
+
+{% endblock main %}
+
+{% block footer %}
+{% include 'footer.html' %}
+{% endblock footer %}

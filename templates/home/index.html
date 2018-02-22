@@ -1,0 +1,92 @@
+
+{% extends 'base.html' %}
+
+{% block main %}
+
+<div id="blog" class="col s12">
+{% for post in post_list %}
+      <div class="row">
+        <div class="col s12">
+          <div class="card hoverable">
+            <div class="card-content">
+                <span class="card-title">{{ post.title }}</span>
+                <p>{{ post.excerpt }}</p>
+                
+            </div>
+<div class="fixed-action-btn horizontal" style="position: absolute; display: inline-block; right: 5%; bottom: 35px">
+    <a class="btn-floating btn-large halfway-fab waves-effect waves-light red" href="{{ post.get_absolute_url }}">
+              <i class="material-icons">chrome_reader_mode</i>
+            </a>
+          </div>
+            <div class="card-action">
+                <a href="#"><i class="material-icons" style="vertical-align:middle;">visibility</i><span style="vertical-align:middle;">{{ post.views }}</span></a>
+                <a href="{% url 'blog:post_edit' post.pk %}">编辑</a>
+                <a href="{% url 'blog:post_delete' post.pk %}">删除</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      {% empty %}
+          <div class="row">
+      <div class="col s12">
+        <div class="card-panel teal">
+          <span class="white-text">没有Post
+          </span>
+        </div>
+      </div>
+    </div>
+
+{% endfor %}
+</div>
+
+<div id="note" class="col s12">
+<link href="{% static 'note/style.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+<div class="section no-pad-bot">
+    <div class="container">
+<div id="masonry-grid" class="row">
+{% for note in note_list %}
+    <div class="col s6 m4">
+        <div class="card hoverable">
+            {% if note.image_url %}
+            <div class="card-image">
+                <img class="activator" src="{{ note.image_url }}">
+            </div>
+            {% elif note.image %}
+            <div class="card-image">
+                <img class="activator" src="{{ note.image }}">
+            </div>
+            {% endif %}
+            <div class="card-content">
+                <span class="card-title">{{ note.title }}</span>
+            </div>
+            <div class="card-action">
+                <a href="{% url 'note:like' note.pk %}"><i class="material-icons" style="vertical-align:middle;">visibility</i><span style="vertical-align:middle;">{{ note.likes }}</span></a>
+                <a href="{% url 'note:note_edit' note.pk %}">编辑</a>
+            </div>
+
+            <div class="card-reveal">
+                <span class="card-title grey-text text-darken-4">{{ note.title }}<i class="material-icons right">close</i></span>
+                <p>{{ note.content }}</p>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+</div>
+</div>
+
+</div>
+
+<script src="{% static 'note/masonry.pkgd.min.js' %}"></script>
+<script src="{% static 'note/init.js' %}"></script>
+
+
+
+{% endblock main %}
+
+{% block footer %}
+
+{% include 'footer.html' %}
+{% endblock footer %}

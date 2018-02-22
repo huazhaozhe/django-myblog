@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block header %}
+{% include 'nav-note.html' %}
+{% include 'side-nav.html' %}
+{% endblock header %}
+
+{% block main %}
+<link rel="stylesheet" type="text/css" href="{% static 'simditor/styles/simditor.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'simditor/styles/simditor-emoji.css' %}" />
+<br>
+<br>
+<div class="row">
+
+    <form class="col s8 offset-s2" action="{% if pk %}{% url 'note:note_edit' pk %}{% else %}{% url 'note:note_edit' %}{% endif %}" method="post">
+        <span>提示：标题和图片链接不可同时为空．如果含有详情而没有图片链接将看不到详情</span>
+        <br>
+        <br>
+        {% csrf_token %}
+        {{ form }}
+        <div class="row">
+            <div class="col s12">
+                <button type="submit" class="waves-effect waves-light btn" id="save">保存</button>
+                <a class="waves-effect waves-light btn" href="{% url 'blog:index' %}">取消</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="{% static 'simditor/scripts/module.js' %}"></script>
+<script type="text/javascript" src="{% static 'simditor/scripts/hotkeys.js' %}"></script>
+<script type="text/javascript" src="{% static 'simditor/scripts/simditor.js' %}"></script>
+<script type="text/javascript" src="{% static 'simditor/scripts/simditor-mark.js' %}"></script>
+<script type="text/javascript" src="{% static 'simditor/scripts/simditor-emoji.js' %}"></script>
+
+
+<script>
+$(document).ready(function() {
+    $('select').material_select();
+
+    $(".simditor").each(function(index, dom){
+        new Simditor({
+            toolbar:['title','bold','italic','underline','strikethrough','color','mark' ,'ol','blockquote','code','link','image','hr','alignment','emoji'],
+            emoji:{
+                imagePath:"{% static 'simditor/emoji/' %}",
+            },
+            textarea:$(dom),
+            toolbarFloat: true,
+            toolbarFloatOffset: 0
+        })
+});
+});
+</script>
+
+{% endblock main %}

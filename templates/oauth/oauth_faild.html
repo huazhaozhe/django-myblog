@@ -1,0 +1,27 @@
+
+{% extends 'base.html' %}
+
+{% block title %}
+<title>登录失败 - ZheBlog</title>
+{% endblock title %}
+
+{% block header %}
+{% include 'nav-home.html' %}
+{% include 'side-nav.html' %}
+{% endblock header %}
+
+{% block main %}
+
+<div class="container center">
+    <div class="row">
+    <span>登录过程错误</span>
+<a class="waves-effect waves-light btn" href="{% url 'account:login' %}">返回重试</a>
+<a class="waves-effect waves-light btn" href="{% url 'home:home' %}">返回Home</a>
+</div>
+</div>
+
+{% endblock main %}
+
+{% block footer %}
+{% include 'footer.html' %}
+{% endblock footer %}

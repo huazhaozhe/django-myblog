@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+<title>登录</title>
+{% endblock title %}
+
+{% block header %}
+{% include 'nav-home.html' %}
+{% include 'side-nav.html' %}
+{% endblock header %}
+
+{% block main %}
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div class="col s12 center">
+    <a href="{% url 'oauth:github_login' %}?next={{ next }}">
+        <img class="type" src="{% static 'images/github.png' %}" alt="GITHUB" widgth="48" height="48" />
+        <p>Github登录</p>
+    </a>
+</div>
+
+<br>
+<br>
+<br>
+<br>
+
+{% endblock main %}
+
+{% block footer %}
+{% include 'footer.html' %}
+{% endblock footer %}
