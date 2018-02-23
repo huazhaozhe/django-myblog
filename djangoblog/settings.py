@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from config import django_data
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,14 +21,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '=7o0-hju&y-=_o7rmd_y@gw-8_(jovlk_nbrn3hfq$5m+7h-m('
+SECRET_KEY = django_data['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-import socket
-if socket.gethostbyname(socket.gethostname())[:3] == '192':
-    DEBUG = TEMPLATE_DEBUG = True
-else:
-    DEBUG = TEMPLATE_DEBUG = True
+
+DEBUG = django_data['DEBUG']
+
 
 ALLOWED_HOSTS = ['*']
 
@@ -124,18 +123,18 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 AUTH_USER_MODEL = 'accounts.User'
 
-SITE_URL = os.environ.get('SITE_URL')
+SITE_URL = django_data['SITE_URL']
 
 OAUTH = {
         'github': {
-            'client_id': os.environ.get('GITHUB_ID'),
-            'client_secret': os.environ.get('GITHUB_KEY'),
+            'client_id': django_data['GITHUB_ID'],
+            'client_secret': django_data['GITHUB_KEY'],
             'redirect_url': SITE_URL + '/oauth/github_check'
             },
         'weibo': {}
         }
 
-ADMINS = [(os.environ.get('DJANGO_ADMINS_NAME'), os.environ.get('DJANGO_ADMINS_EMAIL'))]
+ADMINS = [(django_data['ADMINS_NAME'], django_data['ADMINS_EMAIL'])]
 
 SEND_BROKEN_LINK_EMAILS = True
 MANAGERS = ADMINS
@@ -144,8 +143,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.exmail.qq.com'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_PASSWD')
+EMAIL_HOST_USER = django_data['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = django_data['EMAIL_HOST_PASSWORD']
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = EMAIL_HOST_USER
 
 LOGGING = {
