@@ -9,3 +9,5 @@ log/
 whoosh_index/
 collected_static/
 config.py
+*.sh
+fabfile.py
