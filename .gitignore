@@ -12,3 +12,5 @@ config.py
 *.sh
 fabfile.py
 uploads/
+env/
+*.ini
