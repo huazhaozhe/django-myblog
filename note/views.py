@@ -24,7 +24,7 @@ class NoteIndexView(ListView):
     model = Note
     template_name = 'note/index.html'
     context_object_name = 'note_list'
-    paginate_by = 12
+    paginate_by = 9
 
     def get_context_data(self, **kwargs):
         context = super(NoteIndexView, self).get_context_data(**kwargs)
