@@ -27,6 +27,7 @@ def github_check(request):
     #next = request.GET.get('next', '/')
     print(request.COOKIES)
     next = request.COOKIES.get('next', '/')
+    print(next)
     type = 1
     request_code = request.GET.get('code')
     github_oauth = GithubOauth(settings.OAUTH['github']['client_id'], settings.OAUTH['github']['client_secret'], settings.OAUTH['github']['redirect_url'])
