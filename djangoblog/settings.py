@@ -27,7 +27,7 @@ SECRET_KEY = django_data['SECRET_KEY']
 
 DEBUG = django_data['DEBUG']
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = django_data['ALLOWED_HOSTS']
 
 
 # Application definition
@@ -177,8 +177,8 @@ LOGGING = {
             'backupCount': 5,
             'formatter':'standard',
         },
-        'console':{
-            'level': 'DEBUG',
+        'console': {
+            'level': 'DEBUG' if not DEBUG else 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'standard',
         },
