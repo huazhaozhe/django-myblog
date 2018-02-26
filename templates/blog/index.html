@@ -54,7 +54,7 @@
                         </div>
 
                         <div class="card-action">
-
+                            <div class="row" style="margin-bottom:0px;">
                             {% if user.is_superuser %}
 
                                 <a href="{% url 'blog:post_edit' post.pk %}">
@@ -83,7 +83,10 @@
                                 </a>
                             {% endif %}
 
+                            </div>
+
                             {% if post.tags.all %}
+                            <div class="row" style="margin-top:10px; margin-bottom:0px;">
                             {% for tag in post.tags.all %}
                             <a href="{% url 'blog:tag' tag.pk %}">
                                 <div class="chip">
@@ -91,6 +94,7 @@
                                 </div>
                             </a>
                             {% endfor %}
+                            </div>
                             {% endif %}
 
                         </div>
