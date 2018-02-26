@@ -17,10 +17,16 @@ to_email = [settings.ADMINS[0][1]]
 def github_login(request):
     github_oauth = GithubOauth(settings.OAUTH['github']['client_id'], settings.OAUTH['github']['client_secret'], settings.OAUTH['github']['redirect_url'])
     url = github_oauth.get_auth_url(next=request.GET.get('next', '/'))
-    return redirect(url)
+    obj = redirect(url)
+    obj.set_cookie('next', next)
+    print(obj)
+    return obj
+    #return redirect(url)
 
 def github_check(request):
-    next = request.GET.get('next', '/')
+    #next = request.GET.get('next', '/')
+    print(request.COOKIES)
+    next = request.COOKIES.get('next', '/')
     type = 1
     request_code = request.GET.get('code')
     github_oauth = GithubOauth(settings.OAUTH['github']['client_id'], settings.OAUTH['github']['client_secret'], settings.OAUTH['github']['redirect_url'])

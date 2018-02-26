@@ -178,8 +178,8 @@ LOGGING = {
             'backupCount': 5,
             'formatter':'standard',
         },
-        'console':{
-            'level': 'DEBUG',
+        'console': {
+            'level': 'DEBUG' if not DEBUG else 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'standard',
         },
