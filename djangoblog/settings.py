@@ -28,7 +28,7 @@ SECRET_KEY = django_data['SECRET_KEY']
 DEBUG = django_data['DEBUG']
 
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = django_data['ALLOWED_HOSTS']
 
 
 # Application definition
