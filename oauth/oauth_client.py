@@ -38,11 +38,11 @@ class GithubOauth(BaseOauth):
     API_USER_URL = 'https://api.github.com/user'
     API_EMAIL_URL = 'https://api.github.com/user/emails'
 
-    def get_auth_url(self, next='/'):
+    def get_auth_url(self):
         params = {
                 'client_id': self.client_id,
                 'response_type': 'code',
-                'redirect_url': self.redirect_url + '&next=' + next,
+                'redirect_url': self.redirect_url,
                 'scope': 'user',
                 'state': 1
                 }

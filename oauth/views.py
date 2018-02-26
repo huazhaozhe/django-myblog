@@ -18,17 +18,12 @@ def github_login(request):
     github_oauth = GithubOauth(settings.OAUTH['github']['client_id'], settings.OAUTH['github']['client_secret'], settings.OAUTH['github']['redirect_url'])
     url = github_oauth.get_auth_url()
     next = request.GET.get('next', '/')
-    obj = redirect(url)
-    obj.set_cookie('next', next)
-    print(obj)
-    return obj
-    #return redirect(url)
+    response = redirect(url)
+    response.set_cookie('next', next)
+    return response
 
 def github_check(request):
-    #next = request.GET.get('next', '/')
-    print(request.COOKIES)
     next = request.COOKIES.get('next', '/')
-    print(next)
     type = 1
     request_code = request.GET.get('code')
     github_oauth = GithubOauth(settings.OAUTH['github']['client_id'], settings.OAUTH['github']['client_secret'], settings.OAUTH['github']['redirect_url'])
@@ -42,7 +37,9 @@ def github_check(request):
             if oauth_user[0].user.enable:
                 oauth_user[0].user.backend = 'django.contrib.auth.backends.ModelBackend'
                 login(request, oauth_user[0].user)
-                return redirect(next)
+                response = redirect(next)
+                response.delete_cookie('next')
+                return response
             else:
                 return redirect('account:login')
         nickname = infos.get('name', 'github'+str(openid)[::2])
@@ -63,7 +60,9 @@ def github_check(request):
             send_mail('django-github新用户', new_user_email_message, from_email, to_email)
         except:
             pass
-        return redirect(next)
+        response = redirect(next)
+        response.delete_cookie('next')
+        return response
     except:
         try:
             send_mail('django-github登录错误', 'Error', from_email, to_email)
