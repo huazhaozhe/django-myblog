@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 
 from django.views.generic import ListView, DetailView
+from django.views.decorators.cache import cache_page
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.conf import settings
@@ -102,6 +103,7 @@ class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/detail.html'
     context_object_name = 'post'
+
 
     def get(self, request, *args, **kwargs):
         response = super(PostDetailView, self).get(request, *args, **kwargs)
