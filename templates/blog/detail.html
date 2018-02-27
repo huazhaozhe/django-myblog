@@ -89,11 +89,13 @@
 
             </div>
         </div>
-{% if post.comment_enabled or user.is_superuser %}
-{% include 'comments.html' %}
-{% else %}
-没有开放评论
-{% endif %}
+        <br>
+        <br>
+        {% if post.comment_enabled or user.is_superuser %}
+            {% include 'comments.html' %}
+        {% else %}
+            没有开放评论
+        {% endif %}
     </div>
     <div class="col hide-on-small-only m3 l2">
         <div class="toc-wrapper pinned">
