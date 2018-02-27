@@ -146,7 +146,7 @@
         {% else %}
 
             <li>
-                <a class="btn-floating green" href="{% url 'account:login' %}">
+                <a class="btn-floating green" href="{% url 'account:login' %}?next={{ request.path }}">
                     <i class="material-icons">account_circle</i>
                 </a>
             </li>
