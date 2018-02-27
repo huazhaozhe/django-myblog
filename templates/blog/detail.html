@@ -26,6 +26,7 @@
     main {
         flex: 1 0 auto;
     }
+
 {% endblock style %}
 
 {% block header %}
@@ -34,13 +35,12 @@
 {% endblock header %}
 
 {% block main %}
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
-<br>
-<div class="row">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+<div class="row" style="margin:3%;">
     <div class="col s12 m9 l10">
         <div class="card hoverable">
             <div class="card-content">
-                    <h4 class="header center">{{ post.title }}</h4>
+                    <h4 class="header center" style="word-wrap: break-word">{{ post.title }}</h4>
                     <div class="divider"></div>
                     <br>
                     <div class="container center">
@@ -89,6 +89,13 @@
 
             </div>
         </div>
+        <br>
+        <br>
+        {% if post.comment_enabled or user.is_superuser %}
+            {% include 'comments.html' %}
+        {% else %}
+            没有开放评论
+        {% endif %}
     </div>
     <div class="col hide-on-small-only m3 l2">
         <div class="toc-wrapper pinned">
@@ -99,11 +106,7 @@
     </div>
 </div>
 
-{% if post.comment_enabled or user.is_superuser %}
-{% include 'comments.html' %}
-{% else %}
-没有开放评论
-{% endif %}
+
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 
@@ -119,6 +122,9 @@ function find_anchor(){
     return b;
 }
 $(document).ready(function(){
+    $('pre code').each(function(i, block) {
+        hljs.highlightBlock(block);
+    });
     $('.scrollspy').scrollSpy();
     list = find_anchor();
     $('.table-of-contents').append(list);

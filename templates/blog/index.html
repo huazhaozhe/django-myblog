@@ -54,7 +54,7 @@
                         </div>
 
                         <div class="card-action">
-
+                            <div class="row" style="margin-bottom:0px;">
                             {% if user.is_superuser %}
 
                                 <a href="{% url 'blog:post_edit' post.pk %}">
@@ -83,14 +83,18 @@
                                 </a>
                             {% endif %}
 
+                            </div>
+
                             {% if post.tags.all %}
+                            <div class="row" style="margin-top:10px; margin-bottom:0px;">
                             {% for tag in post.tags.all %}
-                            <a href="{% url 'blog:tag' tag.pk %}">
+                            <a href="{% url 'blog:tag' tag.pk %}" style="margin-right:5px;">
                                 <div class="chip">
                                     <span style="color: #ffa000;">{{ tag.name }}</span>
                                 </div>
                             </a>
                             {% endfor %}
+                            </div>
                             {% endif %}
 
                         </div>
@@ -142,7 +146,7 @@
         {% else %}
 
             <li>
-                <a class="btn-floating green" href="{% url 'account:login' %}">
+                <a class="btn-floating green" href="{% url 'account:login' %}?next={{ request.path }}">
                     <i class="material-icons">account_circle</i>
                 </a>
             </li>
