@@ -43,7 +43,6 @@
 <link rel="stylesheet" type="text/css" href="{% static 'simditor/styles/simditor-emoji.css' %}" />
 
 <div class="row" id="comment_post">
-    <div class="col s12 m9 l10">
         <div class="card hoverable">
             <div class='card-content'>
                 共有<span style="font-weight: bold;">{{ post.comment_set.all.count }}</span>条评论<br>
@@ -71,12 +70,10 @@
                 {% endif %}
             </div>
         </div>
-    </div>
 </div>
 
 {% for comment_parent, comment_childs in comment_list %}
     <div class="row">
-        <div class="col s12 m9 l10">
             <div class="card hoverable" style="padding-bottom:10px;">
                 <div class="card-content" id="{{ comment_parent.pk }}" style="padding:24px 24px 0px 24px;">
                     <div class="row" style="margin:0px;">
@@ -226,7 +223,6 @@
                     {% endif %}
                 {% endfor %}
             </div>
-        </div>
     </div>
 {% endfor %}
 
