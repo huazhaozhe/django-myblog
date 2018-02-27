@@ -42,7 +42,7 @@
                     <ul>
                         {% for post in future_post_list %}
                         <li>
-                            <a href="{{ post.get_absolute_url }}" style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ post.title }}</a>
+                            <a class="overflow1" href="{{ post.get_absolute_url }}">{{ post.title }}</a>
                         </li>
                         {% empty %}
                         <li>没有即将发布post</li>
@@ -62,7 +62,7 @@
                     <ul>
                         {% for post in recent_post_list %}
                         <li>
-                            <a href="{{ post.get_absolute_url }}" style="width: 300px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{ post.title }}</a>
+                            <a class="overflow1" href="{{ post.get_absolute_url }}">{{ post.title }}</a>
                         </li>
                         {% empty %}
                         <li>最近没有post</li>
