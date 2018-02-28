@@ -26,6 +26,7 @@
     main {
         flex: 1 0 auto;
     }
+
 {% endblock style %}
 
 {% block header %}
@@ -46,8 +47,8 @@
                 <div class="col s12">
                     <div class="card hoverable">
                         <div class="card-content">
-                            <span class="card-title">{{ post.title }}</span>
-                            <span>{{ post.excerpt|safe }}</span>
+                            <span class="card-title" style="word-wrap: break-word">{{ post.title }}</span>
+                            <span class="overflow2">{{ post.excerpt|safe }}</span>
                             <a class="btn-floating btn-large halfway-fab waves-effect waves-light red" href="{{ post.get_absolute_url }}">
                                 <i class="material-icons">chrome_reader_mode</i>
                             </a>   
@@ -60,7 +61,10 @@
                                 <a href="{% url 'blog:post_edit' post.pk %}">
                                     <i class="material-icons" style="vertical-align:middle;">mode_edit</i>
                                 </a>
-                                <a href="{% url 'blog:post_delete' post.pk %}">
+                                <a class="post">
+                                    <form action="{% url 'blog:post_delete' post.pk %}" method="post" style="display:none;">
+                                        {% csrf_token %}
+                                    </form>
                                     <i class="material-icons" style="vertical-align:middle;">delete</i>
                                 </a>
 
@@ -138,7 +142,10 @@
         {% if user.is_authenticated %}
 
             <li>
-                <a class="btn-floating yellow darken-1" href="{% url 'account:logout' %}">
+                <a class="btn-floating yellow darken-1 post">
+                    <form action="{% url 'account:logout' %}?next={{ request.get_full_path }}" method="post" style="display:none;">
+                        {% csrf_token %}
+                    </form>
                     <i class="material-icons">exit_to_app</i>
                 </a>
             </li>
@@ -146,7 +153,7 @@
         {% else %}
 
             <li>
-                <a class="btn-floating green" href="{% url 'account:login' %}?next={{ request.path }}">
+                <a class="btn-floating green" href="{% url 'account:login' %}?next={{ request.get_full_path }}">
                     <i class="material-icons">account_circle</i>
                 </a>
             </li>
@@ -156,6 +163,12 @@
     </ul>
 </div>
 
+<script>
+    $("a.post").attr({
+        'onclick':"$(this).children().submit();",
+        'href': "javascript:void(0);"
+    });
+</script>
 
 {% endblock main %}
 

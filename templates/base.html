@@ -16,6 +16,24 @@
         <!--script src="{% static 'js/materialize.min.js' %}"></script-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
         <style>
+            .overflow2 {
+                overflow:hidden; 
+
+                text-overflow:ellipsis;
+
+                display:-webkit-box; 
+
+                -webkit-box-orient:vertical;
+
+                -webkit-line-clamp:2;
+            }
+            .overflow1 {
+                overflow:hidden;
+
+                text-overflow:ellipsis;
+
+                white-space:nowrap;
+            }
             {% block style %}
             {% endblock style %}
         </style>

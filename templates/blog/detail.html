@@ -65,8 +65,11 @@
                 {% if user.is_superuser %}
                     <a href="{% url 'blog:post_edit' post.pk %}">
                         <i class="material-icons" style="vertical-align:middle;">mode_edit</i>
-                    </a>
-                    <a href="{% url 'blog:post_delete' post.pk %}">
+                    </a>           
+                    <a href="javascript:void(0);" onclick="$(this).childern().submit();">
+                        <form action="{% url 'blog:post_delete' post.pk %}" method="post" style="display:none;">
+                            {% csrf_token %}
+                        </form>
                         <i class="material-icons" style="vertical-align:middle;">delete</i>
                     </a>
                 {% endif %}

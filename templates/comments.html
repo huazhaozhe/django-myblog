@@ -99,7 +99,10 @@
                             <i class="material-icons" style="vertical-align:middle;">sms</i>
                         </a>
                         {% if user.is_superuser %}
-                            <a href="{% url 'comment:comment_enable' comment_parent.pk %}">
+                            <a class="post">
+                            <form action="{% url 'comment:comment_enable' comment_parent.pk %}" method="post" style="display:none;">
+                                {% csrf_token %}
+                            </form>
                                 {% if comment_parent.enable %}
                                     <i class="material-icons" style="vertical-align:middle;">visibility</i>
                                 {% else %}
@@ -108,7 +111,10 @@
                             </a>
                         {% endif %}
                         {% if user == command_parent.user or user.is_superuser %}
-                            <a href="{% url 'comment:comment_delete' comment_parent.pk %}">
+                            <a class="post">
+                            <form action="{% url 'comment:comment_delete' comment_parent.pk %}" method="post" style="display:none;">
+                                {% csrf_token %}
+                            </form>
                                 <i class="material-icons" style="vertical-align:middle;">delete</i>
                             </a>
                         {% endif %}
@@ -174,7 +180,10 @@
                                         <i class="material-icons" style="vertical-align:middle;">sms</i>
                                     </a>
                                     {% if user.is_superuser %}
-                                        <a href="{% url 'comment:comment_enable' comment.pk %}">
+                                        <a class="post">
+                                        <form action="{% url 'comment:comment_enable' comment.pk %}" method="post" style="display:none;">
+                                            {% csrf_token %}
+                                        </form>
                                             {% if comment.enable %}
                                                 <i class="material-icons" style="vertical-align:middle;">visibility</i>
                                             {% else %}
@@ -183,7 +192,10 @@
                                         </a>
                                     {% endif %}
                                     {% if user == command_parent.user or user.is_superuser %}
-                                        <a href="{% url 'comment:comment_delete' comment.pk %}">
+                                        <a class="post">
+                                        <form action="{% url 'comment:comment_delete' comment.pk %}" method="post" style="display:none;">
+                                            {% csrf_token %}
+                                        </form>
                                             <i class="material-icons" style="vertical-align:middle;">delete</i>
                                         </a>
                                     {% endif %}
@@ -257,6 +269,9 @@ $(document).ready(function(){
         });
     });
 });
-
+    $("a.post").attr({
+        'onclick':"$(this).children().submit();",
+        'href': "javascript:void(0);"
+    });
 </script>
 
