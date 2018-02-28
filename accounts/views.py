@@ -44,7 +44,7 @@ def user_login(request):
 
 @csrf_protect
 def user_logout(request):
+    redirect_url = request.POST.get('next', request.GET.get('next', '/'))
     if request.method == 'POST':
         logout(request)
-        redirect_url = request.POST.get('next', request.GET.get('next', '/'))
     return redirect(redirect_url)
