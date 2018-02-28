@@ -6,6 +6,7 @@ from django import forms
 from django.views.generic import ListView
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.decorators import login_required, permission_required
+from django.views.decorators.csrf import csrf_protect
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator
 from django.core.exceptions import PermissionDenied
@@ -103,26 +104,38 @@ def add_or_edit(request, pk=0):
     context = {'pk': pk, 'form': form}
     return render(request, 'note/note_edit.html', context=context)
 
+@csrf_protect
 def note_like(request, note_pk):
-    note = get_object_or_404(Note, pk=note_pk)
-    note.increase_likes()
-    return redirect(reverse('note:index'))
+    next = request.GET.get('next', reverse('note:index'))
+    if request.method == 'POST':
+        note = get_object_or_404(Note, pk=note_pk)
+        note.increase_likes()
+    return redirect(next)
 
 @login_required(login_url='account/login')
+@csrf_protect
 def note_delete(request, note_pk):
-    note = get_object_or_404(Note, pk=note_pk)
     next = request.GET.get('next', reverse('note:index'))
-    if request.user == note.author or request.user.is_superuser:
-        note.delete()
-        return redirect(next)
-    else:
-        raise PermissionDenied
+    if request.method == 'POST':
+        note = get_object_or_404(Note, pk=note_pk)
+        if request.user == note.author or request.user.is_superuser:
+            note.delete()
+        else:
+            raise PermissionDenied
+    return redirect(next)
 
+@login_required(login_url='account/login')
+@csrf_protect
 def note_visible(request, note_pk):
-    note = get_object_or_404(Note, pk=note_pk)
-    note.visible = not note.visible
-    note.save()
-    return redirect('/note/')
+    next = request.GET.get('next', reverse('note:index'))
+    if request.method == 'POST':
+        note = get_object_or_404(Note, pk=note_pk)
+        if note.author == request.user or request.user.is_superuser:
+            note.visible = not note.visible
+            note.save()
+        else:
+            raise PermissionDenied
+    return redirect(next)
 
 
 class NoteAddOrEditView(UpdateView):

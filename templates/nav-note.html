@@ -1,5 +1,12 @@
 <ul id="dropdown1" class="dropdown-content">
-    <li><a href="{% url 'account:logout' %}?next={{ request.path }}">注销</a></li>
+    <li>
+        <a href="javascript:void(0);" onclick="$(this).childern().submit();">
+            <form action="{% url 'account:logout' %}?next={{ request.get_full_path }}" method="post" style="display:none;">
+                {% csrf_token %}
+            </form>
+            注销
+        </a>
+    </li>
 </ul>
 
 <div class="navbar-fixed">
@@ -24,7 +31,7 @@
                 </li>
                 {% else %}
                 <li>
-                    <a href="{% url 'account:login' %}?next={{ request.path }}">登录</a>
+                    <a href="{% url 'account:login' %}?next={{ request.get_full_path }}">登录</a>
                 </li>
                 {% endif %}
             </ul>

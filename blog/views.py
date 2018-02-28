@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 
 from django.views.generic import ListView, DetailView
+from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.cache import cache_page
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
@@ -233,13 +234,15 @@ class PostAddOrEditView(UpdateView):
 #@login_required(login_url='/account/login')
 #@permission_required('blog.add_post', 'blog.change_post', 'blog.delete_post')
 @user_passes_test(check_superuser)
+@csrf_protect
 def post_delete(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    post.delete()
-    try:
-        send_mail('django-blog-delete', post.title, from_email, to_email)
-    except:
-        pass
+    if request.method == 'POST':
+        post = get_object_or_404(Post, pk=pk)
+        post.delete()
+        try:
+            send_mail('django-blog-delete', post.title, from_email, to_email)
+        except:
+            pass
     return redirect(reverse('blog:index'))
 
 def archives(request, year, month):

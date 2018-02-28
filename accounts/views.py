@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 
+from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Permission
 from django.core.urlresolvers import reverse
@@ -41,7 +42,9 @@ def user_login(request):
     form = LoginForm(initial={'next': redirect_url})
     return render(request, 'accounts/login.html', context={'form': form, 'next': redirect_url})
 
+@csrf_protect
 def user_logout(request):
-    logout(request)
-    redirect_url = request.POST.get('next', request.GET.get('next', '/'))
+    if request.method == 'POST':
+        logout(request)
+        redirect_url = request.POST.get('next', request.GET.get('next', '/'))
     return redirect(redirect_url)

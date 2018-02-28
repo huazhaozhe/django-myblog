@@ -39,24 +39,33 @@
                         {% endif %}
 
                         <div class="card-action">
-                            <a href="{% url 'note:like' note.pk %}">
+                            <a class="post">
+                                <form action="{% url 'note:like' note.pk %}?next={{ request.get_full_path }}" method="post" style="display:none;">
+                                    {% csrf_token %}
+                                </form>
                                 <i class="material-icons" style="vertical-align:middle;">thumb_up</i>
                                 <span style="vertical-align:middle;">{{ note.likes }}</span>
                             </a>
 
                             {% if user == note.author or user.is_superuser %}
 
-                                <a href="{% url 'note:note_visible' note.pk %}" alt="可见性">
+                                <a class="post">
+                                    <form action="{% url 'note:note_visible' note.pk %}?next={{ request.get_full_path }}" method="post" style="display:none;">
+                                        {% csrf_token %}
+                                    </form>
                                     {% if note.visible %}
-                                    <i class="material-icons" style="vertical-align:middle;">visibility</i>
+                                        <i class="material-icons" style="vertical-align:middle;">visibility</i>
                                     {% else %}
-                                    <i class="material-icons" style="vertical-align:middle;">visibility_off</i>
+                                        <i class="material-icons" style="vertical-align:middle;">visibility_off</i>
                                     {% endif %}
                                 </a>
                                 <a href="{% url 'note:note_edit' note.pk %}">
                                     <i class="material-icons" style="vertical-align:middle;">mode_edit</i>
                                 </a>
-                                <a href="{% url 'note:note_delete' note.pk %}">
+                                <a class="post">
+                                    <form action="{% url 'note:note_delete' note.pk %}?next={{ request.get_full_path }}" method="post" style="display:none;">
+                                        {% csrf_token %}
+                                    </form>
                                     <i class="material-icons" style="vertical-align:middle;">delete</i>
                                 </a>
 
@@ -99,7 +108,10 @@
 
             <li><a class="btn-floating red" href="{% url 'note:note_edit' %}"><i class="material-icons">add</i></a></li>
             <li>
-                <a class="btn-floating yellow darken-1" href="{% url 'account:logout' %}">
+                <a class="btn-floating yellow darken-1 post">
+                    <form action="{% url 'account:logout' %}?next={{ request.get_full_path }}" method="post" style="display:none;">
+                        {% csrf_token %}
+                    </form>
                     <i class="material-icons">exit_to_app</i>
                 </a>
             </li>
@@ -107,7 +119,7 @@
         {% else %}
 
             <li>
-                <a class="btn-floating green" href="{% url 'account:login' %}?next={{ request.path }}">
+                <a class="btn-floating green" href="{% url 'account:login' %}?next={{ request.get_full_path }}">
                     <i class="material-icons">account_circle</i>
                 </a>
             </li>
@@ -120,7 +132,12 @@
 
 <script src="{% static 'note/masonry.pkgd.min.js' %}"></script>
 <script src="{% static 'note/init.js' %}"></script>
-
+<script>
+    $("a.post").attr({
+        'onclick':"$(this).children().submit();",
+        'href': "javascript:void(0);"
+    });
+</script>
 
 {% endblock main %}
 
