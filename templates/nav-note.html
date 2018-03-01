@@ -1,6 +1,6 @@
 <ul id="dropdown1" class="dropdown-content">
     <li>
-        <a href="javascript:void(0);" onclick="$(this).childern().submit();">
+        <a href="javascript:void(0);" onclick="$(this).children().submit();">
             <form action="{% url 'account:logout' %}?next={{ request.get_full_path }}" method="post" style="display:none;">
                 {% csrf_token %}
             </form>
