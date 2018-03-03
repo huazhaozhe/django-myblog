@@ -115,6 +115,10 @@
                     <i class="material-icons">exit_to_app</i>
                 </a>
             </li>
+            
+            {% if user.is_superuser %}
+                <li><a class="btn-floating red" href="/master"><i class="material-icons">memory</i></a></li>
+            {% endif %}
 
         {% else %}
 
