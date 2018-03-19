@@ -1,7 +1,11 @@
 ## django-myblog
 ### 简介
-基于Django和MaterialDesign风格的个人blog.
-[django1.8](https://docs.djangoproject.com/en/1.8/),前端主要是[materializecss](https://github.com/Dogfalo/materialize). 使用了simditor和ckeditor富文本编辑器,简单的全文搜索.
+基于Django和MaterialDesign风格的个人blog.<br>
+django版本:[django1.8](https://docs.djangoproject.com/en/1.8/)<br>
+前端主要是[materializecss](https://github.com/Dogfalo/materialize)<br>
+图标:[Material icons](http://icon.okgoes.com/)<br>
+使用了simditor和ckeditor富文本编辑器,简单的全文搜索<br>
+最近应该没时间继续弄了,以后有时间再折腾
 ### 目前主要功能
 #### blog部分
 - blog主页浮动卡片式设计
@@ -28,3 +32,4 @@
 
 ### 部署安装
 参见[django部署:nginx+virtualenv+uwsgi+supervisor](https://www.huazhaozhe.info/blog/post/2)
+
