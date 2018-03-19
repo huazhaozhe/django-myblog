@@ -48,7 +48,7 @@ INSTALLED_APPS = (
     'note',
     'home',
     'oauth',
-    'haystack',
+#    'haystack',
 )
 
 MIDDLEWARE_CLASSES = (
