@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-from config import django_data
+from config import django_conf
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -21,14 +21,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = django_data['SECRET_KEY']
+SECRET_KEY = django_conf['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = django_data['DEBUG']
+DEBUG = django_conf['DEBUG']
 
-ALLOWED_HOSTS = django_data['ALLOWED_HOSTS']
-
+ALLOWED_HOSTS = django_conf['ALLOWED_HOSTS']
 
 # Application definition
 
@@ -47,7 +46,7 @@ INSTALLED_APPS = (
     'note',
     'home',
     'oauth',
-#    'haystack',
+    # 'haystack',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -122,18 +121,18 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 AUTH_USER_MODEL = 'accounts.User'
 
-SITE_URL = django_data['SITE_URL']
+SITE_URL = django_conf['SITE_URL']
 
 OAUTH = {
         'github': {
-            'client_id': django_data['GITHUB_ID'],
-            'client_secret': django_data['GITHUB_KEY'],
+            'client_id': django_conf['GITHUB_ID'],
+            'client_secret': django_conf['GITHUB_KEY'],
             'redirect_url': SITE_URL + '/oauth/github_check'
             },
         'weibo': {}
         }
 
-ADMINS = [(django_data['ADMINS_NAME'], django_data['ADMINS_EMAIL'])]
+ADMINS = [(django_conf['ADMINS_NAME'], django_conf['ADMINS_EMAIL'])]
 
 SEND_BROKEN_LINK_EMAILS = True
 MANAGERS = ADMINS
@@ -142,8 +141,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.exmail.qq.com'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = django_data['EMAIL_HOST_USER']
-EMAIL_HOST_PASSWORD = django_data['EMAIL_HOST_PASSWORD']
+EMAIL_HOST_USER = django_conf['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = django_conf['EMAIL_HOST_PASSWORD']
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = EMAIL_HOST_USER
 
 LOGGING = {
@@ -201,9 +200,12 @@ LOGGING = {
     }
 }
 
-MEDIA_ROOT = 'uploads/'
+# MEDIA_ROOT = 'uploads/'
+MEDIA_ROOT = django_conf['MEDIA_ROOT']
+MEDIA_URL = '/media/'
 
-SIMDITOR_UPLOAD_PATH = 'uploads/'
+# SIMDITOR_UPLOAD_PATH = 'uploads/'
+SIMDITOR_UPLOAD_PATH = MEDIA_ROOT
 SIMDITOR_IMAGE_BACKEND = 'pollow'
 SIMDITOR_TOOLBAR = [
     'title', 'bold', 'italic', 'underline', 'strikethrough', 'fontScale',
