@@ -14,4 +14,4 @@ fabfile.py
 uploads/
 env/
 *.ini
-.idea
+.idea/
