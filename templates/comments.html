@@ -258,20 +258,18 @@ $(document).ready(function(){
             toolbarFloat: true,
             toolbarFloatOffset: 0
         })
-});
+    });
         
     $("a.comment_replay").click(function(){
         var id = String($(this).attr('id'));
-      //alert(id);
-        $("div[class='row'][attr='replay_comment'][id="+id+']').slideToggle(500,function(){
- //$('html,body').animate({scrollTop: $('div[class='row'][attr='replay_comment'][id="+id+']').offset().top}, 1000);
-//$("div[class='row'][attr='replay_comment'][id="+id+']').smoothScroll();
-        });
+        $("div[class='row'][attr='replay_comment'][id="+id+']').slideToggle(500,function(){});
     });
-});
+
     $("a.post").attr({
         'onclick':"$(this).children().submit();",
         'href': "javascript:void(0);"
     });
+});
+
 </script>
 
