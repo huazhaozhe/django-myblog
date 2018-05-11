@@ -12,10 +12,10 @@ from blog.models import Post
 @login_required(login_url='/account/login/')
 @permission_required('comment.add_comment')
 def post_comment(request, post_pk, parent_comment_pk=0):
+    post = get_object_or_404(Post, pk=post_pk)
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
-            post = get_object_or_404(Post, pk=post_pk)
             if parent_comment_pk != '0' and parent_comment_pk != 0:
                 parent_comment = get_object_or_404(Comment, pk=parent_comment_pk)
             else:
