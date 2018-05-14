@@ -25,25 +25,45 @@ def post_comment(request, post_pk, parent_comment_pk=0):
             comment.post = post
             comment.parent_comment = parent_comment
             comment.save()
-            return redirect(post)
-        else:
+            # return redirect(post)
+        # else:
             comment_list = post.get_comments()
+            form = CommentForm()
             context = {
                     'post': post,
                     'form': form,
                     'comment_list': comment_list
                     }
-        return render(request, 'blog/detail.html', context=context)
+        # return render(request, 'blog/detail.html', context=context)
+        #     return render(request, 'comments.html', context=context)
+            return render(request, '_comments.html', context=context)
     return redirect(post)
 
 def comment_delete(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
     post = comment.post
     comment.delete()
-    return redirect(post)
+    form = CommentForm()
+    comment_list = post.get_comments()
+    context = {
+        'post': post,
+        'form': form,
+        'comment_list': comment_list
+    }
+    # return redirect(post)
+    return render(request, '_comments.html', context=context)
 
 def comment_enable(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
+    post = comment.post
     comment.enable = not comment.enable
     comment.save()
-    return redirect(comment.post)
+    form = CommentForm()
+    comment_list = post.get_comments()
+    context = {
+        'post': post,
+        'form': form,
+        'comment_list': comment_list
+    }
+    # return redirect(comment.post)
+    return render(request, '_comments.html', context=context)
