@@ -165,6 +165,12 @@
 </div>
 
 <script>
+  $(document).ready(function(){
+      var elems = document.querySelectorAll('.fixed-action-btn');
+      var instances = M.FloatingActionButton.init(elems, {
+      direction: 'left'
+    });
+  });
     $("a.post").attr({
         'onclick':"$(this).children().submit();",
         'href': "javascript:void(0);"
