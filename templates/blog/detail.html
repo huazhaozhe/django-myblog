@@ -109,6 +109,46 @@
     </div>
 </div>
 
+<div class="fixed-action-btn horizontal">
+    <a class="btn-floating btn-large red">
+        <i class="large material-icons">account_balance</i>
+    </a>
+    <ul>
+        <li><a class="btn-floating" href="{% url 'home:home' %}"><i class="material-icons">home</i></a></li>
+        <li><a class="btn-floating blue" href="{% url 'note:index' %}"><i class="material-icons">note</i></a></li>
+
+        {% if user.is_superuser %}
+
+            <li><a class="btn-floating red" href="{% url 'blog:post_edit' %}"><i class="material-icons">add</i></a></li>
+            <li><a class="btn-floating red" href="/master"><i class="material-icons">memory</i></a></li>
+
+        {% endif %}
+
+        {% if user.is_authenticated %}
+
+            <li>
+                <a class="btn-floating yellow darken-1 post">
+                    <form action="{% url 'account:logout' %}?next={{ request.get_full_path }}" method="post" style="display:none;">
+                        {% csrf_token %}
+                    </form>
+                    <i class="material-icons">exit_to_app</i>
+                </a>
+            </li>
+
+        {% else %}
+
+            <li>
+                <a class="btn-floating green" href="{% url 'account:login' %}?next={{ request.get_full_path }}">
+                    <i class="material-icons">account_circle</i>
+                </a>
+            </li>
+
+        {% endif %}
+
+    </ul>
+</div>
+
+
 
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
@@ -131,6 +171,11 @@ $(document).ready(function(){
     $('.scrollspy').scrollSpy();
     list = find_anchor();
     $('.table-of-contents').append(list);
+
+    var elems = document.querySelectorAll('.fixed-action-btn');
+    var instances = M.FloatingActionButton.init(elems, {
+        direction: 'left'
+    });
 });
 </script>
 
