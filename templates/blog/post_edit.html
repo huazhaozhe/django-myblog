@@ -52,7 +52,7 @@ function get_json_data(){
         },
     };
 
-    var tags_obj = $('.chips-placeholder').material_chip('data');
+    var tags_obj = $('.chips-placeholder').chips('data');
     //var tags = '';
     var tags_list = tags_obj.map(
         function(item, index, array) {
@@ -70,7 +70,6 @@ function get_json_data(){
 
 $(document).ready(function() {
     $('select').formSelect();
-    $('select').material_select();
 });
 $('.chips-placeholder').chips({
     placeholder: 'Enter new tag',
@@ -81,14 +80,14 @@ $("#save").mouseenter(function(){
     get_json_data();
 });
 
-$('.datepicker').pickadate({
+$('.datepicker').datepicker({
     closeOnSelect: true,
     format: 'yyyy/mm/dd',
     selectMonths: true, // Creates a dropdown to control month
     selectYears: 15 // Creates a dropdown of 15 years to control year
 });
 
-$('.timepicker').pickatime({
+$('.timepicker').timepicker({
     autoclose: true,
 });
         

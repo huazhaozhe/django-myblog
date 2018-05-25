@@ -221,7 +221,7 @@ class PostAddOrEditView(UpdateView):
         else:
             #新建post
             self.object = form.save()
-        self.new_category_or_tags()
+        # self.new_category_or_tags()
         return self.get_success_url()
 
     def form_invalid(self, form):
