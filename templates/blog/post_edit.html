@@ -7,7 +7,7 @@
 {% endblock title %}
 
 {% block header %}
-{% include 'nav-home.html' %}
+{% include 'nav-note.html' %}
 {% include 'side-nav.html' %}
 {% endblock header %}
 
@@ -19,9 +19,13 @@
     <form class="col s8 offset-s2" action="{% if pk %}{% url 'blog:post_edit' pk %}{% else %}{% url 'blog:post_edit' %}{% endif %}" method="post">
         {% csrf_token %}
         {{ form }}
+        <label>新的分类</label>
         <input type="text" id="new_category">
+        <label>新的标签</label>
         <div class="chips chips-placeholder" id="tags"></div>
+        <label>日期</label>
         <input type="text" class="datepicker" id="modified_date">
+        <label>时间</label>
         <input type="text" class="timepicker" id="modified_time">    
 
         <div class="row">
@@ -65,9 +69,10 @@ function get_json_data(){
 }
 
 $(document).ready(function() {
+    $('select').formSelect();
     $('select').material_select();
 });
-$('.chips-placeholder').material_chip({
+$('.chips-placeholder').chips({
     placeholder: 'Enter new tag',
     secondaryPlaceholder: '+Tag',
 });
