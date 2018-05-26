@@ -7,7 +7,7 @@
 {% endblock title %}
 
 {% block header %}
-{% include 'nav-home.html' %}
+{% include 'nav-note.html' %}
 {% include 'side-nav.html' %}
 {% endblock header %}
 
@@ -19,9 +19,13 @@
     <form class="col s8 offset-s2" action="{% if pk %}{% url 'blog:post_edit' pk %}{% else %}{% url 'blog:post_edit' %}{% endif %}" method="post">
         {% csrf_token %}
         {{ form }}
+        <label>新的分类</label>
         <input type="text" id="new_category">
+        <label>新的标签</label>
         <div class="chips chips-placeholder" id="tags"></div>
+        <label>日期</label>
         <input type="text" class="datepicker" id="modified_date">
+        <label>时间</label>
         <input type="text" class="timepicker" id="modified_time">    
 
         <div class="row">
@@ -48,8 +52,7 @@ function get_json_data(){
         },
     };
 
-    var tags_obj = $('.chips-placeholder').material_chip('data');
-    //var tags = '';
+    var tags_obj = $('.chips-placeholder').chips('getData', 'chipsData');
     var tags_list = tags_obj.map(
         function(item, index, array) {
             return $.trim(item.tag);
@@ -58,16 +61,14 @@ function get_json_data(){
     json.new_category = $('#new_category').val();
     json.datetime.date = $('#modified_date').val();
     json.datetime.time = $('#modified_time').val();
-    //tags = tags_list.join(',');
-    //alert(tags);
     json.new_tags = tags_list;
     $('#json_data').val(JSON.stringify(json));
 }
 
 $(document).ready(function() {
-    $('select').material_select();
+    $('select').formSelect();
 });
-$('.chips-placeholder').material_chip({
+$('.chips-placeholder').chips({
     placeholder: 'Enter new tag',
     secondaryPlaceholder: '+Tag',
 });
@@ -76,17 +77,17 @@ $("#save").mouseenter(function(){
     get_json_data();
 });
 
-$('.datepicker').pickadate({
+$('.datepicker').datepicker({
     closeOnSelect: true,
     format: 'yyyy/mm/dd',
     selectMonths: true, // Creates a dropdown to control month
     selectYears: 15 // Creates a dropdown of 15 years to control year
 });
 
-$('.timepicker').pickatime({
+$('.timepicker').timepicker({
     autoclose: true,
 });
-        
+
 CKEDITOR.replace('.ckeditor');
 </script>
 

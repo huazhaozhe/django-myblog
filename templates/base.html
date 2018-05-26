@@ -8,13 +8,17 @@
         {% endblock title %}
         <link rel="shortcut icon" href="{%　static 'images/favicon.ico' %}">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <!--link rel="stylesheet" href="{% static 'css/materialize.min.css' %}"-->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-        <!--script src="{% static 'js/jquery-3.3.1.js' %}"></script-->
+        <!--<link rel="stylesheet" href="{% static 'dist/css/materialize.min.css' %}">-->
+        <!--<link rel="stylesheet" href="{% static 'css/materialize.css' %}">-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.1/css/materialize.min.css">
+        <!--<script src="{% static 'js/jquery-3.3.1.js' %}"></script>-->
         <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-        <!--script src="https://code.jquery.com/jquery-2.1.1.min.js"></script-->
-        <!--script src="{% static 'js/materialize.min.js' %}"></script-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+        <!--<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>-->
+        <!--<script src="{% static 'dist/js/materialize.min.js' %}"></script>-->
+        <!--<script src="{% static 'js/materialize.js' %}"></script>-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.1/js/materialize.min.js"></script>
+
+
         <style>
             .overflow2 {
                 overflow:hidden; 
@@ -52,6 +56,39 @@
 
         {% block footer %}
         {% endblock footer %}
+
+        <script type="text/javascript">
+            /* 鼠标点击特效 */
+            var a_idx = 0;
+            jQuery(document).ready(function($) {
+                $("body").click(function(e) {
+                    var a = new Array("富强", "民主", "文明", "和谐", "Google", "自由", "平等", "公正" ,"法治", "爱国", "敬业", "诚信", "友善");
+                    var $i = $("<span/>").text(a[a_idx]);
+                    a_idx = (a_idx + 1) % a.length;
+                    var x = e.pageX,
+                    y = e.pageY;
+                    $i.css({
+                        "z-index": 999999999999999999999999999999999999999999999999999999999999999999999,
+                        "top": y - 20,
+                        "left": x,
+                        "position": "absolute",
+                        "font-weight": "bold",
+                        "color": "#ff6651"
+                    });
+                    $("body").append($i);
+                    $i.animate({
+                        "top": y - 180,
+                        "opacity": 0
+                        },
+                        2000,
+                        function() {
+                            $i.remove();
+                        }
+                    );
+                });
+            });
+
+        </script>
 
     </body>
 </html>

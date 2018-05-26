@@ -22,7 +22,7 @@
         <div class="row">
             <div class="col s12">
                 <button type="submit" class="waves-effect waves-light btn" id="save">保存</button>
-                <a class="waves-effect waves-light btn" href="{% url 'blog:index' %}">取消</a>
+                <a class="waves-effect waves-light btn" href="{% url 'note:index' %}">取消</a>
             </div>
         </div>
     </form>
@@ -37,8 +37,8 @@
 
 <script>
 $(document).ready(function() {
-    $('select').material_select();
-
+    $('select').formSelect();
+});
     $(".simditor").each(function(index, dom){
         new Simditor({
             toolbar:['title','bold','italic','underline','strikethrough','color','mark' ,'ol','blockquote','code','link','image','hr','alignment','emoji'],
@@ -49,8 +49,7 @@ $(document).ready(function() {
             toolbarFloat: true,
             toolbarFloatOffset: 0
         })
-});
-});
+    });
 </script>
 
 {% endblock main %}
