@@ -52,8 +52,7 @@ function get_json_data(){
         },
     };
 
-    var tags_obj = $('.chips-placeholder').chips('data');
-    //var tags = '';
+    var tags_obj = $('.chips-placeholder').chips('getData', 'chipsData');
     var tags_list = tags_obj.map(
         function(item, index, array) {
             return $.trim(item.tag);
@@ -62,8 +61,6 @@ function get_json_data(){
     json.new_category = $('#new_category').val();
     json.datetime.date = $('#modified_date').val();
     json.datetime.time = $('#modified_time').val();
-    //tags = tags_list.join(',');
-    //alert(tags);
     json.new_tags = tags_list;
     $('#json_data').val(JSON.stringify(json));
 }
@@ -90,7 +87,7 @@ $('.datepicker').datepicker({
 $('.timepicker').timepicker({
     autoclose: true,
 });
-        
+
 CKEDITOR.replace('.ckeditor');
 </script>
 

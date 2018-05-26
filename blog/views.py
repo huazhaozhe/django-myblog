@@ -201,8 +201,9 @@ class PostAddOrEditView(UpdateView):
         new_tags = json_data['new_tags']
         modified_date = json_data['datetime']['date']
         modified_time = json_data['datetime']['time']
+        print(modified_time, modified_date)
         if modified_date and modified_time:
-            modified_time = datetime.strptime(modified_date+' '+modified_time, '%Y/%m/%d %I:%M%p')
+            modified_time = datetime.strptime(modified_date+' '+modified_time, '%Y/%m/%d %I:%M %p')
             self.object.modified_time = modified_time
         else:
             self.object.modified_time = timezone.now()
@@ -221,7 +222,7 @@ class PostAddOrEditView(UpdateView):
         else:
             #新建post
             self.object = form.save()
-        # self.new_category_or_tags()
+        self.new_category_or_tags()
         return self.get_success_url()
 
     def form_invalid(self, form):
