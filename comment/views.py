@@ -25,8 +25,7 @@ def post_comment(request, post_pk, parent_comment_pk=0):
             comment.post = post
             comment.parent_comment = parent_comment
             comment.save()
-            # return redirect(post)
-        # else:
+
             comment_list = post.get_comments()
             form = CommentForm()
             context = {
@@ -34,10 +33,9 @@ def post_comment(request, post_pk, parent_comment_pk=0):
                     'form': form,
                     'comment_list': comment_list
                     }
-        # return render(request, 'blog/detail.html', context=context)
-        #     return render(request, 'comments.html', context=context)
+
             return render(request, '_comments.html', context=context)
-    return redirect(post)
+    # return redirect(post)
 
 def comment_delete(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
