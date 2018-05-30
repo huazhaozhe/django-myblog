@@ -8,7 +8,7 @@ from django.views.decorators.cache import cache_page
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.conf import settings
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, SuspiciousOperation
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
@@ -232,10 +232,7 @@ class PostAddOrEditView(UpdateView):
         return redirect(self.object)
 
 
-#@login_required(login_url='/account/login')
-#@permission_required('blog.add_post', 'blog.change_post', 'blog.delete_post')
 @user_passes_test(check_superuser)
-@csrf_protect
 def post_delete(request, pk):
     if request.method == 'POST':
         post = get_object_or_404(Post, pk=pk)
@@ -244,7 +241,8 @@ def post_delete(request, pk):
             send_mail('django-blog-delete', post.title, from_email, to_email)
         except:
             pass
-    return redirect(reverse('blog:index'))
+        return redirect(reverse('blog:index'))
+    raise SuspiciousOperation
 
 def archives(request, year, month):
     post_list = Post.objects.filter(created_time__year=year, created_time__month=month).order_by('-created_time')

@@ -17,7 +17,7 @@
                         </div>
                         <div class="row">
                             <div class="col s12">
-                                <button type="submit" class="waves-effect waves-light btn">评论</button>
+                                <button type="button" class="waves-effect waves-light btn">评论</button>
                             </div>
                         </div>
                     </form>
@@ -60,7 +60,7 @@
                         </a>
                         {% if user.is_superuser %}
                             <a class="post">
-                            <form action="{% url 'comment:comment_enable' comment_parent.pk %}" method="post" style="display:none;" class="ajax_form">
+                            <form action="{% url 'comment:comment_enable' comment_parent.pk %}" method="post" style="display:none;">
                                 {% csrf_token %}
                             </form>
                                 {% if comment_parent.enable %}
@@ -72,7 +72,7 @@
                         {% endif %}
                         {% if user == command_parent.user or user.is_superuser %}
                             <a class="post">
-                            <form action="{% url 'comment:comment_delete' comment_parent.pk %}" method="post" style="display:none;" class="ajax_form">
+                            <form action="{% url 'comment:comment_delete' comment_parent.pk %}" method="post" style="display:none;">
                                 {% csrf_token %}
                             </form>
                                 <i class="material-icons" style="vertical-align:middle;">delete</i>
@@ -101,7 +101,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col s12">
-                                                <button type="submit" class="waves-effect waves-light btn">评论</button>
+                                                <button type="button" class="waves-effect waves-light btn">评论</button>
                                             </div>
                                         </div>
                                     </form>
@@ -141,7 +141,7 @@
                                     </a>
                                     {% if user.is_superuser %}
                                         <a class="post">
-                                        <form action="{% url 'comment:comment_enable' comment.pk %}" method="post" style="display:none;" class="ajax_form">
+                                        <form action="{% url 'comment:comment_enable' comment.pk %}" method="post" style="display:none;">
                                             {% csrf_token %}
                                         </form>
                                             {% if comment.enable %}
@@ -153,7 +153,7 @@
                                     {% endif %}
                                     {% if user == command_parent.user or user.is_superuser %}
                                         <a class="post">
-                                        <form action="{% url 'comment:comment_delete' comment.pk %}" method="post" style="display:none;" class="ajax_form">
+                                        <form action="{% url 'comment:comment_delete' comment.pk %}" method="post" style="display:none;">
                                             {% csrf_token %}
                                         </form>
                                             <i class="material-icons" style="vertical-align:middle;">delete</i>
@@ -184,7 +184,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col s12">
-                                                    <button type="submit" class="waves-effect waves-light btn">评论</button>
+                                                    <button type="button" class="waves-effect waves-light btn">评论</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -219,25 +219,117 @@ $(document).ready(function(){
         $("div[class='row'][attr='replay_comment'][id="+id+']').slideToggle(500,function() {});
     });
 
-    $("a.post").attr({
-        'onclick':"$(this).children().submit();",
-        'href': "javascript:void(0);"
-    });
+    //$("a.post").attr({
+    //    'onclick':"$(this).children().submit();",
+    //    'href': "javascript:void(0);"
+    //});
 
-    $(".ajax_form").submit(function() {
+
+
+
+    $("a.post").click(function() {
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
         $.ajax({
             type: "POST",
-            data: $(this).serialize(),
-            url: $(this).attr('action'),
+            //data: $(this).parents().filter('form').serialize(),
+            url: $(this).children().attr('action'),
             cache: false,
             dataType: "html",
             success: function(html, textStatus) {
-                //window.location.reload();
-                $("#ajax_div").replaceWith(html);
-                $("form")[0].reset();
+                if (html != 'ajax_error'){
+                    //window.location.reload();
+                    $("#ajax_div").replaceWith(html);
+                    $("form")[0].reset();
+                }
+                else {
+                    alert('表单验证错误！');
+                }
             },
             error: function(XMLHttpResquest, textStatus, errorThrown) {
-                alert("内容为空或错误操作！");
+                alert("操作出错！");
+            }
+        });
+        return false;
+    });
+
+    $(".ajax_form button").click(function() {
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            data: $(this).parents().filter('form').serialize(),
+            url: $(this).parents().filter('form').attr('action'),
+            cache: false,
+            dataType: "html",
+            success: function(html, textStatus) {
+                if (html != 'ajax_error'){
+                    //window.location.reload();
+                    $("#ajax_div").replaceWith(html);
+                    $("form")[0].reset();
+                }
+                else {
+                    alert('表单验证错误，请检查内容是否为空！');
+                }
+            },
+            error: function(XMLHttpResquest, textStatus, errorThrown) {
+                alert("评论出错！");
             }
         });
         return false;
