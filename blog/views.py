@@ -201,7 +201,6 @@ class PostAddOrEditView(UpdateView):
         new_tags = json_data['new_tags']
         modified_date = json_data['datetime']['date']
         modified_time = json_data['datetime']['time']
-        print(modified_time, modified_date)
         if modified_date and modified_time:
             modified_time = datetime.strptime(modified_date+' '+modified_time, '%Y/%m/%d %I:%M %p')
             self.object.modified_time = modified_time
