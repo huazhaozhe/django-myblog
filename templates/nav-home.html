@@ -1,3 +1,4 @@
+
 <ul id="dropdown1" class="dropdown-content">
     <li>
         <a href="javascript:void(0);" onclick="$(this).children().submit();">
@@ -12,16 +13,19 @@
 <div class="navbar-fixed">
     <nav>
         <div class="nav-wrapper">
-            <ul id="nav-mobile" class="left hide-on-med-and-down">
+
+            <ul>
                 <li>
-                    <a href="#" data-activates="slide-out" class="btn-button-collapse"><i class="material-icons">menu</i></a>
+                    <a href="javascript:void(0);" onclick="$('.sidenav').sidenav('open');"><i class="material-icons">menu</i></a>
                 </li>
+                <!--<li>-->
+                    <!--<a href="{% url 'home:home' %}" class="brand-logo">Zhe</a>-->
+                <!--</li>-->
             </ul>
-            <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 {% if user.is_authenticated %}
                 <li>
-                    <a class="dropdown-button" href="#!" data-activates="dropdown1">
+                    <a class="dropdown-trigger" href="#!" data-target="dropdown1">
                         {% if user.nickname %} {{ user.nickname }} {% else %} {{ user.username }} {% endif %}
                         <i class="material-icons right">arrow_drop_down</i>
                     </a>
@@ -36,3 +40,8 @@
     </nav>
 </div>
 
+<script>
+  $(document).ready(function(){
+    $(".dropdown-trigger").dropdown();
+  });
+</script>
