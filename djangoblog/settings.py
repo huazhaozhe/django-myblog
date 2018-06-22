@@ -170,7 +170,8 @@ LOGGING = {
         'debug': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, "log", 'debug.log'),
+            'filename': os.path.join(BASE_DIR, "log", 'debug.log') if DEBUG else
+            django_conf['LOG_DIR'],
             'maxBytes': 1024 * 1024 * 5,
             'backupCount': 5,
             'formatter': 'standard',
