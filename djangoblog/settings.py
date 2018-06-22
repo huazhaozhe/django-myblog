@@ -86,7 +86,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3') if DEBUG else \
-            os.path.join(BASE_DIR, '..', 'database', 'db.sqlite3'),
+            django_conf['DATABASE_DIR'],
     }
 }
 
@@ -200,7 +200,7 @@ LOGGING = {
 }
 
 # MEDIA_ROOT = 'uploads/'
-MEDIA_ROOT = django_conf['MEDIA_ROOT']
+MEDIA_ROOT = 'uploads' if DEBUG else django_conf['MEDIA_ROOT']
 MEDIA_URL = '/media/'
 
 # SIMDITOR_UPLOAD_PATH = 'uploads/'
