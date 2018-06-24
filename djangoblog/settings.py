@@ -16,7 +16,6 @@ from config import django_conf
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -80,17 +79,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'djangoblog.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3') if DEBUG else \
+            django_conf['DATABASE_DIR'],
     }
 }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -105,15 +103,14 @@ USE_L10N = True
 
 USE_TZ = False
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, 'static'),
-        )
+    os.path.join(BASE_DIR, 'static'),
+)
 
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_COOKIE_AGE = 3600 * 24 * 7
@@ -124,13 +121,13 @@ AUTH_USER_MODEL = 'accounts.User'
 SITE_URL = django_conf['SITE_URL']
 
 OAUTH = {
-        'github': {
-            'client_id': django_conf['GITHUB_ID'],
-            'client_secret': django_conf['GITHUB_KEY'],
-            'redirect_url': SITE_URL + '/oauth/github_check'
-            },
-        'weibo': {}
-        }
+    'github': {
+        'client_id': django_conf['GITHUB_ID'],
+        'client_secret': django_conf['GITHUB_KEY'],
+        'redirect_url': SITE_URL + '/oauth/github_check'
+    },
+    'weibo': {}
+}
 
 ADMINS = [(django_conf['ADMINS_NAME'], django_conf['ADMINS_EMAIL'])]
 
@@ -149,13 +146,15 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
     'formatters': {
-       'standard': {
-            'format': '%(asctime)s [%(threadName)s:%(thread)d] [%(name)s:%(lineno)d] [%(module)s:%(funcName)s] [%(levelname)s]- %(message)s'}
+        'standard': {
+            'format': '%(asctime)s [%(threadName)s:%(thread)d] [%(name)s:%('
+                      'lineno)d] [%(module)s:%(funcName)s] [%(levelname)s]- '
+                      '%(message)s'}
     },
     'filters': {
         'require_debug_false': {
-                '()': 'django.utils.log.RequireDebugFalse',
-            }
+            '()': 'django.utils.log.RequireDebugFalse',
+        }
     },
     'handlers': {
         'null': {
@@ -169,12 +168,13 @@ LOGGING = {
             'include_html': True,
         },
         'debug': {
-            'level':'DEBUG',
-            'class':'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, "log",'debug.log'),
-            'maxBytes':1024*1024*5,
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, "log", 'debug.log') if DEBUG else
+            django_conf['LOG_DIR'],
+            'maxBytes': 1024 * 1024 * 5,
             'backupCount': 5,
-            'formatter':'standard',
+            'formatter': 'standard',
         },
         'console': {
             'level': 'DEBUG' if not DEBUG else 'INFO',
@@ -189,7 +189,7 @@ LOGGING = {
             'propagate': False
         },
         'django.request': {
-            'handlers': ['debug','mail_admins'],
+            'handlers': ['debug', 'mail_admins'],
             'level': 'ERROR',
             'propagate': True,
         },
@@ -201,7 +201,7 @@ LOGGING = {
 }
 
 # MEDIA_ROOT = 'uploads/'
-MEDIA_ROOT = django_conf['MEDIA_ROOT']
+MEDIA_ROOT = 'uploads' if DEBUG else django_conf['MEDIA_ROOT']
 MEDIA_URL = '/media/'
 
 # SIMDITOR_UPLOAD_PATH = 'uploads/'
@@ -226,14 +226,13 @@ SIMDITOR_CONFIGS = {
 }
 
 HAYSTACK_CONNECTIONS = {
-        'default': {
-            'ENGINE': 'blog.whoosh_cn_backend.WhooshEngine',
-            'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
-            }
-        }
+    'default': {
+        'ENGINE': 'blog.whoosh_cn_backend.WhooshEngine',
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    }
+}
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 10
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
-
 
 CKEDITOR_CONFIGS = {
     'default': {
@@ -243,24 +242,34 @@ CKEDITOR_CONFIGS = {
             ['Source', '-', 'Bold', 'Italic']
         ],
         'toolbar_YourCustomToolbarConfig': [
-            {'name': 'document', 'items': ['Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates']},
-            {'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']},
+            {'name': 'document',
+             'items': ['Source', '-', 'Save', 'NewPage', 'Preview', 'Print',
+                       '-', 'Templates']},
+            {'name': 'clipboard',
+             'items': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord',
+                       '-', 'Undo', 'Redo']},
             {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll']},
             {'name': 'forms',
-             'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
+             'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea',
+                       'Select', 'Button', 'ImageButton',
                        'HiddenField']},
             '/',
             {'name': 'basicstyles',
-             'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']},
+             'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript',
+                       'Superscript', '-', 'RemoveFormat']},
             {'name': 'paragraph',
-             'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
-                       'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
+             'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent',
+                       '-', 'Blockquote', 'CreateDiv', '-',
+                       'JustifyLeft', 'JustifyCenter', 'JustifyRight',
+                       'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
                        'Language']},
             {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
             {'name': 'insert',
-             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']},
+             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley',
+                       'SpecialChar', 'PageBreak', 'Iframe']},
             '/',
-            {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
+            {'name': 'styles',
+             'items': ['Styles', 'Format', 'Font', 'FontSize']},
             {'name': 'colors', 'items': ['TextColor', 'BGColor']},
             {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
             {'name': 'about', 'items': ['About']},
@@ -272,17 +281,16 @@ CKEDITOR_CONFIGS = {
 
             ]},
         ],
-        'toolbar': 'YourCustomToolbarConfig',  # put selected toolbar config here
-        # 'toolbarGroups': [{ 'name': 'document', 'groups': [ 'mode', 'document', 'doctools' ] }],
-        # 'height': 291,
-        # 'width': '100%',
-        # 'filebrowserWindowHeight': 725,
-        # 'filebrowserWindowWidth': 940,
-        # 'toolbarCanCollapse': True,
-        # 'mathJaxLib': '//cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML',
+        'toolbar': 'YourCustomToolbarConfig',  # put selected toolbar config
+        # here 'toolbarGroups': [{ 'name': 'document', 'groups': [ 'mode',
+        # 'document', 'doctools' ] }], 'height': 291, 'width': '100%',
+        # 'filebrowserWindowHeight': 725, 'filebrowserWindowWidth': 940,
+        # 'toolbarCanCollapse': True, 'mathJaxLib':
+        # '//cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX
+        # -AMS_HTML',
         'tabSpaces': 4,
         'extraPlugins': ','.join([
-            'uploadimage', # the upload image feature
+            'uploadimage',  # the upload image feature
             # your extra plugins here
             'div',
             'autolink',
@@ -299,4 +307,3 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
-

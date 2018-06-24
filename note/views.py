@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.views.decorators.csrf import csrf_protect
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, SuspiciousOperation
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils.decorators import method_decorator
@@ -72,7 +72,6 @@ class NoteIndexView(ListView):
 
 
 @login_required(login_url='/account/login')
-#@permission_required('note.add_note', 'note.change_note', 'note.delete_note')
 def add_or_edit(request, pk=0):
     if request.method == 'POST':
         form = NoteForm(request.POST)
@@ -104,38 +103,38 @@ def add_or_edit(request, pk=0):
     context = {'pk': pk, 'form': form}
     return render(request, 'note/note_edit.html', context=context)
 
-@csrf_protect
 def note_like(request, note_pk):
-    next = request.GET.get('next', reverse('note:index'))
     if request.method == 'POST':
         note = get_object_or_404(Note, pk=note_pk)
+        next = request.GET.get('next', reverse('note:index'))
         note.increase_likes()
-    return redirect(next)
+        return redirect(next)
+    raise SuspiciousOperation
 
 @login_required(login_url='account/login')
-@csrf_protect
 def note_delete(request, note_pk):
-    next = request.GET.get('next', reverse('note:index'))
     if request.method == 'POST':
         note = get_object_or_404(Note, pk=note_pk)
+        next = request.GET.get('next', reverse('note:index'))
         if request.user == note.author or request.user.is_superuser:
             note.delete()
         else:
             raise PermissionDenied
-    return redirect(next)
+        return redirect(next)
+    raise SuspiciousOperation
 
 @login_required(login_url='account/login')
-@csrf_protect
 def note_visible(request, note_pk):
-    next = request.GET.get('next', reverse('note:index'))
     if request.method == 'POST':
+        next = request.GET.get('next', reverse('note:index'))
         note = get_object_or_404(Note, pk=note_pk)
         if note.author == request.user or request.user.is_superuser:
             note.visible = not note.visible
             note.save()
         else:
             raise PermissionDenied
-    return redirect(next)
+        return redirect(next)
+    raise SuspiciousOperation
 
 
 class NoteAddOrEditView(UpdateView):

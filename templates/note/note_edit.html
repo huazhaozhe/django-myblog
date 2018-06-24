@@ -38,7 +38,6 @@
 <script>
 $(document).ready(function() {
     $('select').formSelect();
-});
     $(".simditor").each(function(index, dom){
         new Simditor({
             toolbar:['title','bold','italic','underline','strikethrough','color','mark' ,'ol','blockquote','code','link','image','hr','alignment','emoji'],
@@ -50,6 +49,7 @@ $(document).ready(function() {
             toolbarFloatOffset: 0
         })
     });
+});
 </script>
 
 {% endblock main %}
