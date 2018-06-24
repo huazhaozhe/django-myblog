@@ -12,82 +12,92 @@
 
 {% block main %}
 
-<link href="{% static 'note/style.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
+<link href="{% static 'note/style.css' %}" type="text/css" rel="stylesheet"
+      media="screen,projection"/>
 
-    <div id="reshow" class="section no-pad-bot">
-        <div id="masonry-grid" class="row">
+<div id="reshow" class="section no-pad-bot">
+    <div id="masonry-grid" class="row">
 
-            {% for note in note_list %}
-            {% if note.visible or note.author == user or user.is_superuser %}
+        {% for note in note_list %}
+        {% if note.visible or note.author == user or user.is_superuser %}
 
-                <div class="col s6 m4">
-                    <div class="card hoverable">
+        <div class="col s6 m4">
+            <div class="card hoverable">
 
-                        {% if note.image_url %}
-                        
-                            <div class="card-image">
-                                <img class="activator" src="{{ note.image_url }}">
-                            </div>
+                {% if note.image_url %}
 
+                <div class="card-image">
+                    <img class="activator" src="{{ note.image_url }}">
+                </div>
+
+                {% endif %}
+                {% if note.title %}
+
+                <div class="card-content">
+                    <span class="card-title" style="word-wrap: break-word">{{ note.title }}</span>
+                </div>
+
+                {% endif %}
+
+                <div class="card-action">
+                    <a class="post">
+                        <form action="{% url 'note:like' note.pk %}?next={{ request.get_full_path }}"
+                              method="post" style="display:none;">
+                            {% csrf_token %}
+                        </form>
+                        <i class="material-icons"
+                           style="vertical-align:middle;">thumb_up</i>
+                        <span style="vertical-align:middle;">{{ note.likes }}</span>
+                    </a>
+
+                    {% if user == note.author or user.is_superuser %}
+
+                    <a class="post">
+                        <form action="{% url 'note:note_visible' note.pk %}?next={{ request.get_full_path }}"
+                              method="post" style="display:none;">
+                            {% csrf_token %}
+                        </form>
+                        {% if note.visible %}
+                        <i class="material-icons"
+                           style="vertical-align:middle;">visibility</i>
+                        {% else %}
+                        <i class="material-icons"
+                           style="vertical-align:middle;">visibility_off</i>
                         {% endif %}
-                        {% if note.title %}
+                    </a>
+                    <a href="{% url 'note:note_edit' note.pk %}">
+                        <i class="material-icons"
+                           style="vertical-align:middle;">mode_edit</i>
+                    </a>
+                    <a class="post">
+                        <form action="{% url 'note:note_delete' note.pk %}?next={{ request.get_full_path }}"
+                              method="post" style="display:none;">
+                            {% csrf_token %}
+                        </form>
+                        <i class="material-icons"
+                           style="vertical-align:middle;">delete</i>
+                    </a>
 
-                            <div class="card-content">
-                                <span class="card-title" style="word-wrap: break-word">{{ note.title }}</span>
-                            </div>
+                    {% endif %}
 
-                        {% endif %}
+                    <a>
+                        <i class="material-icons"
+                           style="vertical-align:middle;">account_circle</i>
+                        <span style="vertical-align:middle;">{{ note.author }}</span>
+                    </a>
 
-                        <div class="card-action">
-                            <a class="post">
-                                <form action="{% url 'note:like' note.pk %}?next={{ request.get_full_path }}" method="post" style="display:none;">
-                                    {% csrf_token %}
-                                </form>
-                                <i class="material-icons" style="vertical-align:middle;">thumb_up</i>
-                                <span style="vertical-align:middle;">{{ note.likes }}</span>
-                            </a>
-
-                            {% if user == note.author or user.is_superuser %}
-
-                                <a class="post">
-                                    <form action="{% url 'note:note_visible' note.pk %}?next={{ request.get_full_path }}" method="post" style="display:none;">
-                                        {% csrf_token %}
-                                    </form>
-                                    {% if note.visible %}
-                                        <i class="material-icons" style="vertical-align:middle;">visibility</i>
-                                    {% else %}
-                                        <i class="material-icons" style="vertical-align:middle;">visibility_off</i>
-                                    {% endif %}
-                                </a>
-                                <a href="{% url 'note:note_edit' note.pk %}">
-                                    <i class="material-icons" style="vertical-align:middle;">mode_edit</i>
-                                </a>
-                                <a class="post">
-                                    <form action="{% url 'note:note_delete' note.pk %}?next={{ request.get_full_path }}" method="post" style="display:none;">
-                                        {% csrf_token %}
-                                    </form>
-                                    <i class="material-icons" style="vertical-align:middle;">delete</i>
-                                </a>
-
-                            {% endif %}
-
-                            <a>
-                                <i class="material-icons" style="vertical-align:middle;">account_circle</i>
-                                <span style="vertical-align:middle;">{{ note.author }}</span>
-                            </a>
-
-                        </div>
-                        <div class="card-reveal">
+                </div>
+                <div class="card-reveal">
                             <span class="card-title grey-text text-darken-4">
                                 {{ note.title }}
                                 <i class="material-icons right">close</i>
                             </span>
-                            <p>{{ note.content|safe }}</p>
-                        </div>
-                    </div>
+                    <p>{{ note.content|safe }}</p>
                 </div>
+            </div>
+        </div>
 
-            {% endif %}
+        {% endif %}
         {% endfor %}
 
     </div>
@@ -101,32 +111,38 @@
         <i class="large material-icons">account_balance</i>
     </a>
     <ul>
-        <li><a class="btn-floating" href="{% url 'home:home' %}"><i class="material-icons">home</i></a></li>
-        <li><a class="btn-floating blue" href="{% url 'blog:index' %}"><i class="material-icons">import_contacts</i></a></li>
+        <li><a class="btn-floating" href="{% url 'home:home' %}"><i
+                class="material-icons">home</i></a></li>
+        <li><a class="btn-floating blue" href="{% url 'blog:index' %}"><i
+                class="material-icons">import_contacts</i></a></li>
 
         {% if user.is_authenticated %}
 
-            <li><a class="btn-floating red" href="{% url 'note:note_edit' %}"><i class="material-icons">add</i></a></li>
-            <li>
-                <a class="btn-floating yellow darken-1 post">
-                    <form action="{% url 'account:logout' %}?next={{ request.get_full_path }}" method="post" style="display:none;">
-                        {% csrf_token %}
-                    </form>
-                    <i class="material-icons">exit_to_app</i>
-                </a>
-            </li>
-            
-            {% if user.is_superuser %}
-                <li><a class="btn-floating red" href="/master"><i class="material-icons">memory</i></a></li>
-            {% endif %}
+        <li><a class="btn-floating red" href="{% url 'note:note_edit' %}"><i
+                class="material-icons">add</i></a></li>
+        <li>
+            <a class="btn-floating yellow darken-1 post">
+                <form action="{% url 'account:logout' %}?next={{ request.get_full_path }}"
+                      method="post" style="display:none;">
+                    {% csrf_token %}
+                </form>
+                <i class="material-icons">exit_to_app</i>
+            </a>
+        </li>
+
+        {% if user.is_superuser %}
+        <li><a class="btn-floating red" href="/master"><i
+                class="material-icons">memory</i></a></li>
+        {% endif %}
 
         {% else %}
 
-            <li>
-                <a class="btn-floating green" href="{% url 'account:login' %}?next={{ request.get_full_path }}">
-                    <i class="material-icons">account_circle</i>
-                </a>
-            </li>
+        <li>
+            <a class="btn-floating green"
+               href="{% url 'account:login' %}?next={{ request.get_full_path }}">
+                <i class="material-icons">account_circle</i>
+            </a>
+        </li>
 
         {% endif %}
 
@@ -135,7 +151,7 @@
 
 
 <script src="{% static 'note/masonry.pkgd.min.js' %}"></script>
-<script src="{% static 'note/init.js' %}"></script>
+<!--<script src="{% static 'note/init.js' %}"></script>-->
 <script>
     $(document).ready(function(){
       var elems = document.querySelectorAll('.fixed-action-btn');
@@ -148,25 +164,15 @@
         'href': "javascript:void(0);"
     });
 
-    var imgdefereds=[];
-    $('img').each(function(){
-        var dfd=$.Deferred();
-        $(this).bind('load',function(){
-            dfd.resolve();
-        }).bind('error',function(){
-        //图片加载错误，加入错误处理
-        //  dfd.resolve();
-            alert('图片加载失败!');
-        })
-        if(this.complete) setTimeout(function(){
-            dfd.resolve();
-        },1000);
-        imgdefereds.push(dfd);
-    });
-    $.when.apply(null,imgdefereds).done(function(){
-        $("#reshow").hide();
-        $("#reshow").show();
-    });
+    window.onload=function(){
+            var $container = $('#masonry-grid');
+            // initialize
+            $container.masonry({
+              columnWidth: '.col',
+              itemSelector: '.col',
+            });
+    }
+
 </script>
 
 {% endblock main %}
@@ -174,4 +180,3 @@
 {% block footer %}
 {% include 'footer.html' %}
 {% endblock footer %}
-
