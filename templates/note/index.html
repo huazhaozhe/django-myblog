@@ -14,7 +14,7 @@
 
 <link href="{% static 'note/style.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
 
-    <div class="section no-pad-bot">
+    <div id="reshow" class="section no-pad-bot">
         <div id="masonry-grid" class="row">
 
             {% for note in note_list %}
@@ -137,15 +137,35 @@
 <script src="{% static 'note/masonry.pkgd.min.js' %}"></script>
 <script src="{% static 'note/init.js' %}"></script>
 <script>
-  $(document).ready(function(){
+    $(document).ready(function(){
       var elems = document.querySelectorAll('.fixed-action-btn');
       var instances = M.FloatingActionButton.init(elems, {
       direction: 'left'
     });
-  });
+    });
     $("a.post").attr({
         'onclick':"$(this).children().submit();",
         'href': "javascript:void(0);"
+    });
+
+    var imgdefereds=[];
+    $('img').each(function(){
+        var dfd=$.Deferred();
+        $(this).bind('load',function(){
+            dfd.resolve();
+        }).bind('error',function(){
+        //图片加载错误，加入错误处理
+        //  dfd.resolve();
+            alert('图片加载失败!');
+        })
+        if(this.complete) setTimeout(function(){
+            dfd.resolve();
+        },1000);
+        imgdefereds.push(dfd);
+    });
+    $.when.apply(null,imgdefereds).done(function(){
+        $("#reshow").hide();
+        $("#reshow").show();
     });
 </script>
 
@@ -154,3 +174,4 @@
 {% block footer %}
 {% include 'footer.html' %}
 {% endblock footer %}
+
