@@ -111,7 +111,9 @@ class PostDetailView(DetailView):
         if self.request.user.is_superuser:
             return response
         elif self.object.visible and self.object.status == 1:
-            self.object.increase_views()
+            if not self.request.COOKIES.get('post_%s_readed' % self.object.id, False):
+                self.object.increase_views()
+                response.set_cookie('post_%s_readed' % self.object.id, 'True')
             return response
         else:
             raise PermissionDenied
