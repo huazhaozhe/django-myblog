@@ -163,7 +163,8 @@ class NoteAddOrEditView(UpdateView):
 
     def form_valid(self, form):
         if self.object:
-            if self.object.author == self.request.user or self.request.user.is_superuser:
+            if self.object.author == self.request.user or \
+                    self.request.user.is_superuser:
                 form.save()
             else:
                 raise PermissionDenied

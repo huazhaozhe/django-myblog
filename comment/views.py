@@ -43,36 +43,40 @@ def post_comment(request, post_pk, parent_comment_pk=0):
     raise SuspiciousOperation
 
 
+@login_required(login_url='/account/login/')
 def comment_delete(request, pk):
     if request.method == 'POST':
         comment = get_object_or_404(Comment, pk=pk)
         post = comment.post
-        comment.delete()
-        form = CommentForm()
-        comment_list = post.get_comments()
-        context = {
-            'post': post,
-            'form': form,
-            'comment_list': comment_list
-        }
-        # return redirect(post)
-        return render(request, '_comments.html', context=context)
+        if request.user.is_superuser:
+            comment.delete()
+            form = CommentForm()
+            comment_list = post.get_comments()
+            context = {
+                'post': post,
+                'form': form,
+                'comment_list': comment_list
+            }
+            # return redirect(post)
+            return render(request, '_comments.html', context=context)
     raise SuspiciousOperation
 
 
+@login_required(login_url='/account/login/')
 def comment_enable(request, pk):
     if request.method == 'POST':
         comment = get_object_or_404(Comment, pk=pk)
         post = comment.post
-        comment.enable = not comment.enable
-        comment.save()
-        form = CommentForm()
-        comment_list = post.get_comments()
-        context = {
-            'post': post,
-            'form': form,
-            'comment_list': comment_list
-        }
-        # return redirect(comment.post)
-        return render(request, '_comments.html', context=context)
+        if request.user.is_superuser:
+            comment.enable = not comment.enable
+            comment.save()
+            form = CommentForm()
+            comment_list = post.get_comments()
+            context = {
+                'post': post,
+                'form': form,
+                'comment_list': comment_list
+            }
+            # return redirect(comment.post)
+            return render(request, '_comments.html', context=context)
     raise SuspiciousOperation
