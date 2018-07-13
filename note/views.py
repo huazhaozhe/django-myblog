@@ -2,24 +2,20 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 # Create your views here.
 
-from django import forms
 from django.views.generic import ListView
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.decorators import login_required, permission_required
-from django.views.decorators.csrf import csrf_protect
 from django.core.urlresolvers import reverse
-from django.core.paginator import Paginator
 from django.core.exceptions import PermissionDenied, SuspiciousOperation
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils.decorators import method_decorator
 from .models import Note
-from accounts.models import User
 from .forms import NoteForm
-import os, json
 
 from_email = settings.EMAIL_HOST_USER
 to_email = [settings.ADMINS[0][1]]
+
 
 class NoteIndexView(ListView):
     model = Note
@@ -58,16 +54,16 @@ class NoteIndexView(ListView):
             right_num = num_pages
             right_more = False
             right_more_num = right_num
-        page_list = list(range(left_num, right_num+1))
+        page_list = list(range(left_num, right_num + 1))
         data = {
-                'page_number': page_number,
-                'num_pages': num_pages,
-                'left_more': left_more,
-                'right_more': right_more,
-                'left_more_num': left_more_num,
-                'right_more_num': right_more_num,
-                'page_list': page_list
-                }
+            'page_number': page_number,
+            'num_pages': num_pages,
+            'left_more': left_more,
+            'right_more': right_more,
+            'left_more_num': left_more_num,
+            'right_more_num': right_more_num,
+            'page_list': page_list
+        }
         return data
 
 
@@ -89,7 +85,8 @@ def add_or_edit(request, pk=0):
                     note.author = request.user
                     note.save()
                 return redirect(reverse('note:index'))
-        return render(request, 'note/note_edit.html', context = {'pk': pk, 'form': form})
+        return render(request, 'note/note_edit.html',
+                      context={'pk': pk, 'form': form})
     if pk != 0 and pk != '0':
         pk = pk
         note = get_object_or_404(Note, pk=pk)
@@ -103,6 +100,7 @@ def add_or_edit(request, pk=0):
     context = {'pk': pk, 'form': form}
     return render(request, 'note/note_edit.html', context=context)
 
+
 def note_like(request, note_pk):
     if request.method == 'POST':
         note = get_object_or_404(Note, pk=note_pk)
@@ -110,6 +108,7 @@ def note_like(request, note_pk):
         note.increase_likes()
         return redirect(next)
     raise SuspiciousOperation
+
 
 @login_required(login_url='account/login')
 def note_delete(request, note_pk):
@@ -122,6 +121,7 @@ def note_delete(request, note_pk):
             raise PermissionDenied
         return redirect(next)
     raise SuspiciousOperation
+
 
 @login_required(login_url='account/login')
 def note_visible(request, note_pk):
@@ -146,7 +146,7 @@ class NoteAddOrEditView(UpdateView):
     def dispatch(self, *args, **kwargs):
         return super(NoteAddOrEditView, self).dispatch(*args, **kwargs)
 
-    #重写get_object是因为使用UpdateView新建note时没有pk会出错,参照CreateView返回None
+    # 重写get_object是因为使用UpdateView新建note时没有pk会出错,参照CreateView返回None
     def get_object(self, **kwargs):
         pk = self.kwargs.get('pk', '')
         if pk:
@@ -168,7 +168,7 @@ class NoteAddOrEditView(UpdateView):
             else:
                 raise PermissionDenied
         else:
-            #新建note
+            # 新建note
             note = form.save(False)
             note.author = self.request.user
             note.save()
@@ -178,9 +178,12 @@ class NoteAddOrEditView(UpdateView):
                 email: %s,
                 title: %s,
                 image_url: %s
-                ''' % (note.author.nickname, note.author.email, note.title, note.image_url)
+                ''' % (
+                note.author.nickname, note.author.email, note.title,
+                note.image_url)
             try:
-                send_mail('django-新note', new_note_email_message, from_email, to_email)
+                send_mail('django-新note', new_note_email_message, from_email,
+                          to_email)
             except:
                 pass
         return self.get_success_url()

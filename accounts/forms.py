@@ -5,6 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django import forms
 from .models import User
 
+
 class LoginForm(AuthenticationForm):
     next = forms.CharField(max_length=100, required=False)
 

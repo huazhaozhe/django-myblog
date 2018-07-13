@@ -3,14 +3,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 
 from django.views.generic import ListView, DetailView
-from django.views.decorators.csrf import csrf_protect
-from django.views.decorators.cache import cache_page
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
+from django.contrib.auth.decorators import login_required, \
+    permission_required, user_passes_test
 from django.conf import settings
 from django.core.exceptions import PermissionDenied, SuspiciousOperation
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -18,19 +16,20 @@ from datetime import datetime
 from .models import Category, Tag, Post
 from .forms import PostForm
 from comment.forms import CommentForm
-from django.db.models import Q
-from accounts.models import User
-import json, collections
+import json
 
 from_email = settings.EMAIL_HOST_USER
 to_email = [settings.ADMINS[0][1]]
 
+
 def check_superuser(user):
     return user.is_superuser
+
 
 def index(request):
     post_list = Post.objects.all()
     return render(request, 'blog/index.html', context={'post_list': post_list})
+
 
 class PostIndexView(ListView):
     model = Post
@@ -75,16 +74,16 @@ class PostIndexView(ListView):
             right_num = num_pages
             right_more = False
             right_more_num = right_num
-        page_list = list(range(left_num, right_num+1))
+        page_list = list(range(left_num, right_num + 1))
         data = {
-                'page_number': page_number,
-                'num_pages': num_pages,
-                'left_more': left_more,
-                'right_more': right_more,
-                'left_more_num': left_more_num,
-                'right_more_num': right_more_num,
-                'page_list': page_list
-                }
+            'page_number': page_number,
+            'num_pages': num_pages,
+            'left_more': left_more,
+            'right_more': right_more,
+            'left_more_num': left_more_num,
+            'right_more_num': right_more_num,
+            'page_list': page_list
+        }
         return data
 
 
@@ -94,24 +93,25 @@ def detail(request, pk):
     form = CommentForm()
     comment_list = post.comment_set.all()
     context = {
-            'post': post,
-            'form': form,
-            'comment_list': comment_list
-            }
+        'post': post,
+        'form': form,
+        'comment_list': comment_list
+    }
     return render(request, 'blog/detail.html', context=context)
+
 
 class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/detail.html'
     context_object_name = 'post'
 
-
     def get(self, request, *args, **kwargs):
         response = super(PostDetailView, self).get(request, *args, **kwargs)
         if self.request.user.is_superuser:
             return response
         elif self.object.visible and self.object.status == 1:
-            if not self.request.COOKIES.get('post_%s_readed' % self.object.id, False):
+            if not self.request.COOKIES.get('post_%s_readed' % self.object.id,
+                                            False):
                 self.object.increase_views()
                 response.set_cookie('post_%s_readed' % self.object.id, 'True')
             return response
@@ -125,13 +125,13 @@ class PostDetailView(DetailView):
         context.update({
             'form': form,
             'comment_list': comment_list
-            })
+        })
         return context
+
 
 @login_required(login_url='/account/login')
 @permission_required('blog.add_post', 'blog.change_post', 'blog.delete_post')
 def add_or_edit(request, pk=0):
-
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
@@ -145,7 +145,8 @@ def add_or_edit(request, pk=0):
             modified_date = json_data['datetime']['date']
             modified_time = json_data['datetime']['time']
             if modified_date and modified_time:
-                modified_time = datetime.strptime(modified_date+' '+modified_time, '%Y/%m/%d %I:%M%p')
+                modified_time = datetime.strptime(
+                    modified_date + ' ' + modified_time, '%Y/%m/%d %I:%M%p')
                 post.modified_time = modified_time
             else:
                 post.modified_time = timezone.now()
@@ -159,7 +160,8 @@ def add_or_edit(request, pk=0):
                     post.tags.add(new_tag[0])
             post.save()
             return redirect(post)
-        return render(request, 'blog/post_edit.html', context = {'pk': pk, 'form': form})
+        return render(request, 'blog/post_edit.html',
+                      context={'pk': pk, 'form': form})
     if pk != 0 and pk != '0':
         pk = pk
         post = get_object_or_404(Post, pk=pk)
@@ -171,6 +173,7 @@ def add_or_edit(request, pk=0):
 
     return render(request, 'blog/post_edit.html', context=context)
 
+
 class PostAddOrEditView(UpdateView):
     model = Post
     form_class = PostForm
@@ -181,7 +184,7 @@ class PostAddOrEditView(UpdateView):
     def dispatch(self, *args, **kwargs):
         return super(PostAddOrEditView, self).dispatch(*args, **kwargs)
 
-    #重写get_object是因为使用UpdateView新建post时没有pk会出错,参照CreateView返回None
+    # 重写get_object是因为使用UpdateView新建post时没有pk会出错,参照CreateView返回None
     def get_object(self, **kwargs):
         pk = self.kwargs.get('pk', '')
         if pk:
@@ -196,7 +199,7 @@ class PostAddOrEditView(UpdateView):
         context.update({'pk': pk})
         return context
 
-    #直接新建category和tags并更新
+    # 直接新建category和tags并更新
     def new_category_or_tags(self):
         json_data = json.loads(self.object.json_data)
         new_category = json_data['new_category']
@@ -204,7 +207,8 @@ class PostAddOrEditView(UpdateView):
         modified_date = json_data['datetime']['date']
         modified_time = json_data['datetime']['time']
         if modified_date and modified_time:
-            modified_time = datetime.strptime(modified_date+' '+modified_time, '%Y/%m/%d %I:%M %p')
+            modified_time = datetime.strptime(
+                modified_date + ' ' + modified_time, '%Y/%m/%d %I:%M %p')
             self.object.modified_time = modified_time
         else:
             self.object.modified_time = timezone.now()
@@ -221,7 +225,7 @@ class PostAddOrEditView(UpdateView):
         if self.object:
             form.save()
         else:
-            #新建post
+            # 新建post
             self.object = form.save()
         self.new_category_or_tags()
         return self.get_success_url()
@@ -245,9 +249,13 @@ def post_delete(request, pk):
         return redirect(reverse('blog:index'))
     raise SuspiciousOperation
 
+
 def archives(request, year, month):
-    post_list = Post.objects.filter(created_time__year=year, created_time__month=month).order_by('-created_time')
+    post_list = Post.objects.filter(created_time__year=year,
+                                    created_time__month=month).order_by(
+        '-created_time')
     return render(request, 'blog/index.html', context={'post_list': post_list})
+
 
 class ArchivesView(PostIndexView):
 
@@ -255,12 +263,15 @@ class ArchivesView(PostIndexView):
         year = self.kwargs.get('year')
         month = self.kwargs.get('month')
         day = self.kwargs.get('day')
-        return super(ArchivesView, self).get_queryset().filter(created_time__year=year, created_time__month=month)
+        return super(ArchivesView, self).get_queryset().filter(
+            created_time__year=year, created_time__month=month)
+
 
 def category(request, pk):
     cate = get_object_or_404(Category, pk=pk)
     post_list = Post.objects.filter(category=cate).order_by('-created_time')
     return render(request, 'blog/index.html', context={'post_list': post_list})
+
 
 class CategoryView(PostIndexView):
 
@@ -268,14 +279,14 @@ class CategoryView(PostIndexView):
         cate = get_object_or_404(Category, pk=self.kwargs.get('pk'))
         return super(CategoryView, self).get_queryset().filter(category=cate)
 
+
 def tag(request, pk):
     tag = get_object_or_404(Tag, pk=pk)
     post_list = Post.objects.filter(tags=tag).order_by('-created_time')
     return render(request, 'blog/index.html', context={'post_list': post_list})
 
+
 class TagView(PostIndexView):
     def get_queryset(self):
         tag = get_object_or_404(Tag, pk=self.kwargs.get('pk'))
         return super(TagView, self).get_queryset().filter(tags=tag)
-
-

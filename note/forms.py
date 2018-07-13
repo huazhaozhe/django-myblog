@@ -6,13 +6,13 @@ from .models import Note
 
 
 class NoteForm(forms.ModelForm):
-
     VISIBLE_CHOICES = (
-            (True, '公开'),
-            (False, '仅自己可见'),
-            )
+        (True, '公开'),
+        (False, '仅自己可见'),
+    )
 
-    content = forms.CharField(label='详情', widget=forms.widgets.Textarea(attrs={'class': 'simditor'}), required=False)
+    content = forms.CharField(label='详情', widget=forms.widgets.Textarea(
+        attrs={'class': 'simditor'}), required=False)
     visible = forms.ChoiceField(label='是否公开', choices=VISIBLE_CHOICES)
 
     def clean(self):
@@ -28,4 +28,3 @@ class NoteForm(forms.ModelForm):
     class Meta:
         model = Note
         fields = ['title', 'content', 'image_url', 'visible']
-

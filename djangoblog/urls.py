@@ -16,7 +16,6 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
-
 handler404 = 'home.views.not_found'
 handler500 = 'home.views.server_error'
 handler403 = 'home.views.permission_denied'
@@ -25,7 +24,7 @@ handler400 = 'home.views.bad_request'
 urlpatterns = [
     url(r'^master/', include(admin.site.urls)),
     url(r'^simditor/', include('simditor.urls')),
-    #url(r'^ckeditor/', include('ckeditor.urls')),
+    # url(r'^ckeditor/', include('ckeditor.urls')),
     url(r'^account/', include('accounts.urls', namespace='account')),
     url(r'^blog/', include('blog.urls', namespace='blog')),
     url(r'^oauth/', include('oauth.urls', namespace='oauth')),

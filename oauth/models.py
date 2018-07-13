@@ -6,10 +6,11 @@ from django.conf import settings
 from django.utils import timezone
 
 oauth_type = (
-        (1, 'github'),
-        (2, 'weibo'),
-        (3, 'qq'),
-        )
+    (1, 'github'),
+    (2, 'weibo'),
+    (3, 'qq'),
+)
+
 
 class OauthUser(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='用户')
