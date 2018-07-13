@@ -10,10 +10,8 @@ django-haystack==2.7.0
 django-js-asset==1.0.0
 django-materialize-css==0.0.1
 django-simditor==0.0.8
-Fabric==1.14.0
 idna==2.6
 jieba==0.39
-paramiko==2.4.0
 Pillow==5.0.0
 pyasn1==0.4.2
 pycparser==2.18
