@@ -115,7 +115,7 @@ STATICFILES_DIRS = (
 )
 
 SESSION_SAVE_EVERY_REQUEST = True
-SESSION_COOKIE_AGE = 3600 * 24 * 7
+SESSION_COOKIE_AGE = 30 * 24 * 60 * 60
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -313,8 +313,8 @@ CKEDITOR_CONFIGS = {
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': django_conf[
-            'REDIS_LOCATION'] if DEBUG else 'redis://127.0.0.1:6379',
+        'LOCATION': 'redis://127.0.0.1:6379' if DEBUG else django_conf[
+            'REDIS_LOCATION'],
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             # 'PASSWORD': '',

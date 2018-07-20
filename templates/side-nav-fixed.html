@@ -1,6 +1,9 @@
       
 {% load staticfiles %}
 {% load blog_extras %}
+{% load cache %}
+
+{% cache 604800 side_nav_fixed request.user.is_superuser %}
 <ul id="mobile-demo" class="sidenav sidenav-fixed">
     <li>
         <div class="user-view">
@@ -128,6 +131,7 @@
         </ul>
     </li>
 </ul>
+{% endcache %}
 
 <script>
 $(document).ready(function(){

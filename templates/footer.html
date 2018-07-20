@@ -1,4 +1,7 @@
 {% load staticfiles %}
+{% load cache %}
+
+{% cache 2592000 footer %}
 <footer class="page-footer">
     <div class="container">
         <div class="row">
@@ -24,3 +27,4 @@
         </div>
     </div>
 </footer>
+{% endcache %}

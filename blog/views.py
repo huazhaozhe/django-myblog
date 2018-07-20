@@ -109,11 +109,11 @@ class PostDetailView(DetailView):
         response = super(PostDetailView, self).get(request, *args, **kwargs)
         if self.request.user.is_superuser:
             return response
-        elif self.object.visible and self.object.status == 1:
-            if not self.request.COOKIES.get('post_%s_readed' % self.object.id,
+        elif self.object.visible and self.object.status:
+            if not self.request.session.get('post_%s_readed' % self.object.id,
                                             False):
                 self.object.increase_views()
-                response.set_cookie('post_%s_readed' % self.object.id, 'True')
+                self.request.session['post_%s_readed' % self.object.id] = True
             return response
         else:
             raise PermissionDenied
@@ -151,7 +151,8 @@ def add_or_edit(request, pk=0):
             else:
                 post.modified_time = timezone.now()
             if new_category:
-                category_new = Category.objects.get_or_create(name=new_category)
+                category_new = Category.objects.get_or_create(
+                    name=new_category)
                 post.category = category_new[0]
 
             if new_tags:

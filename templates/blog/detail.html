@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load cache %}
 
 {% block title %}
 <title>{{ post.title }} - ZheBlog</title>
@@ -57,9 +58,11 @@
                     <br>
                 <div class="divider"></div>
                 <br>
+                {% cache 604800 post_cache post.pk %}
                 <div id="body">
                     {{ post.body|safe }}
                 </div>
+                {% endcache %}
             </div>
             <div class="card-action">
 

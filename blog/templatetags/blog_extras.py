@@ -1,30 +1,38 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-from ..models import Category, Tag, Post
+from blog.models import Category, Tag, Post
 from django import template
 from django.db.models.aggregates import Count
 from django.utils.safestring import mark_safe
+
 register = template.Library()
+
 
 @register.assignment_tag
 def get_future():
     return Post.objects.exclude(status=1).order_by('-created_time')
+
+
 @register.assignment_tag
 def get_invisible():
     return Post.objects.exclude(visible=True).order_by('-created_time')
+
 
 @register.assignment_tag
 def get_recent(app='blog', num=5):
     if app == 'blog':
         app = Post
-    return app.objects.filter(visible=True, status=1).order_by('-created_time')[:num]
+    return app.objects.filter(visible=True, status=1).order_by(
+        '-created_time')[:num]
+
 
 @register.assignment_tag
 def get_categories(app='blog'):
     if app == 'blog':
         app = 'post'
     return Category.objects.annotate(num=Count(app)).filter(num__gt=0)
+
 
 @register.assignment_tag
 def get_archives(app='blog'):
@@ -33,9 +41,11 @@ def get_archives(app='blog'):
     time_list = app.objects.dates('created_time', 'month', order='DESC')
     arch = []
     for time in time_list:
-        num = app.objects.filter(created_time__year=time.year, created_time__month=time.month).count()
-        arch.append({'date': time, 'num':num})
+        num = app.objects.filter(created_time__year=time.year,
+                                 created_time__month=time.month).count()
+        arch.append({'date': time, 'num': num})
     return arch
+
 
 @register.assignment_tag
 def get_tags(app='blog'):
@@ -44,20 +54,18 @@ def get_tags(app='blog'):
     return Tag.objects.annotate(num=Count(app)).filter(num__gt=0)
 
 
-
 TEMP1 = """
 <div class='comment'>
 <span>%s評論說:</span><br>
     <span>%s</span>
 """
 
-
-
 TEMP2 = """
 <div class='col s11 offset-s%s'>
 <span>%s 回復 %s:</span><br>
     <span>%s</span>
 """
+
 
 def generate_comment_html(parent_comment, sub_comment_dic, margin_left_val):
     html = '<div class="comment">'
