@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'robotkiller',
     'ckeditor',
     'simditor',
     'accounts',
@@ -50,6 +51,7 @@ INSTALLED_APPS = (
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.cache.UpdateCacheMiddleware',
+    'robotkiller.middleware.BlockedIpMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -330,3 +332,8 @@ CACHE_MIDDLEWARE_SECONDS = 0
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 SESSION_CACHE_ALIAS = "default"
+
+BAN_MAX = 3
+BAN_CYCLE = 24 * 60 * 60
+BAN_COUNT = 5
+BAN_TIME = 10 * 60
