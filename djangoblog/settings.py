@@ -51,7 +51,6 @@ INSTALLED_APPS = (
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.cache.UpdateCacheMiddleware',
-    'robotkiller.middleware.BlockedIpMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -62,6 +61,14 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
 )
+
+if django_conf['BAN_STATUS']:
+    MIDDLEWARE_CLASSES += ('robotkiller.middleware.BlockedIpMiddleware',)
+    BAN_MAX = django_conf['BAN_MAX']
+    BAN_CYCLE = django_conf['BAN_CYCLE']
+    BAN_COUNT = django_conf['BAN_COUNT']
+    BAN_TIME = django_conf['BAN_TIME']
+    BAN_WHITE = django_conf['BAN_WHITE']
 
 ROOT_URLCONF = 'djangoblog.urls'
 
@@ -332,8 +339,3 @@ CACHE_MIDDLEWARE_SECONDS = 0
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 SESSION_CACHE_ALIAS = "default"
-
-BAN_MAX = 3
-BAN_CYCLE = 24 * 60 * 60
-BAN_COUNT = 5
-BAN_TIME = 10 * 60
