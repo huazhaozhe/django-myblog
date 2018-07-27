@@ -2,16 +2,17 @@
 
 {% block title %}
 <title>
-{% if status_code == 404 %}
+    {% if status_code == 404 %}
     404 Not Found
-{% elif ststus_code == 403 %}
+    {% elif status_code == 403 %}
     403 Permission Denied
-{% elif status_code == 500 %}
+    {% elif status_code == 500 %}
     500 Server Error
-{% else %}
+    {% else %}
     Error
-{% endif %}
- - ZheBlog</title>
+    {% endif %}
+    - ZheBlog
+</title>
 {% endblock title %}
 
 {% block header %}
@@ -24,25 +25,33 @@
 <br><br>
 <div class="container">
     <div class="row">
-          <div class="card hoverable">
-              <div class="care-title center">
-                  <p>
-                {% if status_code == 404 %}
-                    404 Not Found
-                {% elif ststus_code == 403 %}
-                    403 Permission Denied
-                {% elif status_code == 500 %}
-                    500 Server Error
-                {% else %}
-                    Error
-                {% endif %}
-                </p>
-                  </div>
-                  <div class="card-content">
-<span>{{ message }}</span>
-</div>
-</div>
-</div>
+        <div class="card hoverable">
+            <div class="card-content">
+                <div class="care-title center">
+                    {% if status_code == 404 %}
+                    <h4>404 Not Found</h4>>
+                    <i class="large material-icons">help</i>
+                    {% elif status_code == 403 %}
+                    <h4>403 Permission Denied</h4>
+                    <i class="large material-icons">not_interested</i>
+                    {% elif status_code == 500 %}
+                    <h4>500 Server Error</h4>
+                    <i class="large material-icons">bug_report</i>
+                    {% else %}
+                    <h4>Error</h4>
+                    <i class="large material-icons">error</i>
+                    {% endif %}
+                </div>
+
+                <p>{{ message }}</p>
+            </div>
+            <div class="card-action">
+                <a href="{% url 'home:home' %}"><i
+                        class="material-icons">home</i></a>
+            </div>
+
+        </div>
+    </div>
 </div>
 <br>
 <br>
