@@ -1,5 +1,6 @@
 
 {% extends 'base.html' %}
+{% load cache %}
 
 {% block title %}
 <title>About - ZheBlog</title>
@@ -11,6 +12,7 @@
 {% include 'side-nav.html' %}
 {% endblock header %}
 
+{% cache 604800 about %}
 {% block main %}
 <br>
 <br>
@@ -26,6 +28,8 @@
 <br>
 <br>
 {% endblock main %}
+{% endcache %}
+
 {% block footer %}
 {% include 'footer.html' %}
 {% endblock footer %}

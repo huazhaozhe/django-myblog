@@ -1,6 +1,7 @@
    
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load cache %}
 
 
 {% block title %}
@@ -14,6 +15,7 @@
 
 {% endblock header %}
 
+{% cache 604800 home %}
 {% block main %}
 <style>
     #index-banner {
@@ -116,6 +118,7 @@
 
 </script>
 {% endblock main %}
+{% endcache %}
 
 {% block footer %}
 {% include 'footer.html' %}
