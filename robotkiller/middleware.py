@@ -28,7 +28,7 @@ forbidden_str = '''
 class BlockedIpMiddleware():
 
     def process_request(self, request):
-        if cache.get('ban_init') != 1 or not hasattr(self, 'ban_init'):
+        if cache.ttl('ban_init') == 0 or not hasattr(self, 'ban_init'):
             self.get_ban_addr()
         addr = request.META['REMOTE_ADDR']
         if not request.user.is_superuser and addr not in settings.BAN_WHITE \
@@ -69,5 +69,5 @@ class BlockedIpMiddleware():
             elif addr.unlock_time > datetime.now():
                 unlock_timeout = addr.unlock_time - datetime.now()
                 cache.set(addr.addr, -1, timeout=unlock_timeout.total_seconds())
-        cache.set('ban_init', 1, timeout=None)
+        cache.set('ban_init', 1, timeout=settings.BAN_TIME)
         self.ban_init = True
