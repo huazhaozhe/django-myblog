@@ -37,7 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'robotkiller',
+    'middleware',
     'ckeditor',
     'simditor',
     'accounts',
@@ -58,7 +58,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'robotkiller.middleware.BlockedIpMiddleware',
+    'middleware.middleware.BlockedIpMiddleware',
 )
 
 BAN_STATUS = django_conf['BAN_STATUS']

@@ -8,7 +8,7 @@
 
 from django.core.cache import cache
 from django.conf import settings
-from robotkiller.models import AddrKiller
+from middleware.models import AddrKiller
 from django.core.exceptions import PermissionDenied
 from datetime import datetime, timedelta
 from django.http import HttpResponseForbidden

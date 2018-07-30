@@ -6,6 +6,7 @@ from django.db import models
 from datetime import datetime, timedelta
 from django.conf import settings
 
+
 def default_unlock_time():
     return datetime.now() + timedelta(days=10)
 
