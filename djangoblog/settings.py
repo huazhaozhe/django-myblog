@@ -59,6 +59,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'middleware.middleware.BlockedIpMiddleware',
+    'middleware.middleware.SuperuserExceptionMiddleware',
 )
 
 BAN_STATUS = django_conf['BAN_STATUS']
@@ -331,3 +332,4 @@ CACHES = {
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 SESSION_CACHE_ALIAS = "default"
+ADMIN_ADDR = django_conf['ADMIN_ADDR']

@@ -6,7 +6,9 @@
 # @Software : PyCharm
 
 
+import sys
 from django.core.cache import cache
+from django.views.debug import technical_500_response, technical_404_response
 from django.conf import settings
 from middleware.models import AddrKiller
 from django.core.exceptions import PermissionDenied
@@ -71,3 +73,11 @@ class BlockedIpMiddleware():
                 cache.set(addr.addr, -1, timeout=unlock_timeout.total_seconds())
         cache.set('ban_init', 1, timeout=settings.BAN_TIME)
         self.ban_init = True
+
+
+class SuperuserExceptionMiddleware():
+
+    def process_exception(self, request, exception):
+        if request.user.is_superuser or request.META['REMOTE_ADDR'] \
+                in settings.ADMIN_ADDR:
+            return technical_500_response(request, *sys.exc_info())

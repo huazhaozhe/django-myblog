@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 from .models import Home
+from django.http import Http404
 
 
 def home(request):
@@ -35,3 +36,11 @@ def bad_request(request):
     return render(request, 'home/error.html',
                   {'message': '呃,你有点无聊', 'status_code': 400},
                   status=400)
+
+
+def error(request):
+    if request.user.is_superuser:
+        # 管理员访问这个页面引发错误,这是故意设置
+        a = 3 / 0
+    else:
+        raise Http404
