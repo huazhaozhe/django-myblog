@@ -48,6 +48,8 @@ class BlockedIpMiddleware():
                     return HttpResponseForbidden(forbidden_str % addr)
                 else:
                     cache.set(addr, num + 1, timeout=cache.ttl(addr))
+        else:
+            cache.set(addr, 0, timeout=settings.BAN_CYCLE)
 
     def check_addr(self, addr):
         ban_addr = AddrKiller.objects.get_or_create(addr=addr)
