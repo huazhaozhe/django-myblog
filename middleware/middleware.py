@@ -43,7 +43,7 @@ class BlockedIpMiddleware():
             elif ttl > 0:
                 num = cache.get(addr)
                 if num + 1 > settings.BAN_COUNT:
-                    self.check_addr(addr)
+                    self.check_addr(request)
                     return HttpResponseForbidden(forbidden_str % addr)
                 elif num == -1:
                     return HttpResponseForbidden(forbidden_str % addr)
@@ -52,7 +52,8 @@ class BlockedIpMiddleware():
         else:
             cache.set(addr, 0, timeout=settings.BAN_CYCLE)
 
-    def check_addr(self, addr):
+    def check_addr(self, request):
+        addr = request.META['REMOTE_ADDR']
         ban_addr = AddrKiller.objects.get_or_create(addr=addr)
         ban_num = ban_addr[0].count
         if ban_num + 1 > settings.BAN_MAX:
@@ -64,6 +65,7 @@ class BlockedIpMiddleware():
                 seconds=settings.BAN_TIME)
             cache.set(addr, -1, timeout=settings.BAN_TIME)
         ban_addr[0].count = ban_num + 1
+        ban_addr[0].user_agent = request.META.get('HTTP_USER_AGENT', '')
         ban_addr[0].save()
 
     def get_ban_addr(self):

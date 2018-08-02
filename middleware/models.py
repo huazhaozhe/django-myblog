@@ -17,4 +17,5 @@ class AddrKiller(models.Model):
     unlock_time = models.DateTimeField('下次解封时间', default=default_unlock_time)
     count = models.IntegerField('封禁次数', default=0)
     status = models.BooleanField('永久封禁', default=False)
-    status_time = models.DateTimeField('封禁时间', null=True)
+    status_time = models.DateTimeField('封禁时间', blank=True)
+    user_agent = models.CharField(max_length=100, blank=True)

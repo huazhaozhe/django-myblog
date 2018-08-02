@@ -6,7 +6,8 @@ from middleware.models import AddrKiller
 
 
 class AddrKillerAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['addr', 'status', 'status_time', 'count', 'unlock_time',
+                    'user_agent']
 
 
 admin.site.register(AddrKiller, AddrKillerAdmin)
