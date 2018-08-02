@@ -35,11 +35,12 @@ class BlockedIpMiddleware():
         addr = request.META['REMOTE_ADDR']
         if not request.user.is_superuser and addr not in settings.BAN_WHITE \
                 and settings.BAN_STATUS:
-            if cache.ttl(addr) == 0:
-                cache.set(addr, 1, timeout=settings.BAN_CYCLE)
-            elif cache.ttl(addr) is None:
+            ttl = cache.ttl(addr)
+            if ttl is None:
                 return HttpResponseForbidden(forbidden_str % addr)
-            elif cache.ttl(addr) > 0:
+            elif ttl == 0:
+                cache.set(addr, 1, timeout=settings.BAN_CYCLE)
+            elif ttl > 0:
                 num = cache.get(addr)
                 if num + 1 > settings.BAN_COUNT:
                     self.check_addr(addr)
@@ -47,7 +48,7 @@ class BlockedIpMiddleware():
                 elif num == -1:
                     return HttpResponseForbidden(forbidden_str % addr)
                 else:
-                    cache.set(addr, num + 1, timeout=cache.ttl(addr))
+                    cache.set(addr, num + 1, timeout=ttl)
         else:
             cache.set(addr, 0, timeout=settings.BAN_CYCLE)
 
@@ -72,7 +73,8 @@ class BlockedIpMiddleware():
                 cache.set(addr.addr, -1, timeout=None)
             elif addr.unlock_time > datetime.now():
                 unlock_timeout = addr.unlock_time - datetime.now()
-                cache.set(addr.addr, -1, timeout=unlock_timeout.total_seconds())
+                cache.set(addr.addr, -1,
+                          timeout=unlock_timeout.total_seconds())
         cache.set('ban_init', 1, timeout=settings.BAN_TIME)
         self.ban_init = True
 
