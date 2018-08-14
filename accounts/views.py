@@ -32,17 +32,6 @@ def user_login(request):
     redirect_url = request.POST.get('next', request.GET.get('next', '/'))
     if request.user.is_authenticated():
         return redirect(redirect_url)
-    # if request.method == 'POST':
-    #     form = LoginForm(request, request.POST)
-    #     if form.is_valid():
-    #         username = request.POST.get('username')
-    #         password = request.POST.get('password')
-    #         user = authenticate(username=username, password=password)
-    #         if user is not None and user.is_superuser:
-    #             login(request, user)
-    #             return redirect(redirect_url)
-    #     return render(request, 'accounts/login.html', context={'form': form, 'next': redirect_url})
-    # form = LoginForm(initial={'next': redirect_url})
     return render(request, 'accounts/login.html',
                   context={'next': redirect_url})
 

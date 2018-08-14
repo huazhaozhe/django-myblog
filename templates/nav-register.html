@@ -1,0 +1,27 @@
+
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper">
+
+            <ul>
+                <li>
+                    <a href="javascript:void(0);" onclick="$('.sidenav').sidenav('open');"><i class="material-icons">menu</i></a>
+                </li>
+                <li>
+                    <a href="{% url 'home:home' %}" class="brand-logo">Zhe</a>
+                </li>
+            </ul>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li>
+                    <a href="{% url 'account:login' %}?next={{ next }}">登录</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<script>
+  $(document).ready(function(){
+    $(".dropdown-trigger").dropdown();
+  });
+</script>

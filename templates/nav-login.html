@@ -1,0 +1,23 @@
+
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper">
+
+            <ul>
+                <li>
+                    <a href="javascript:void(0);" onclick="$('.sidenav').sidenav('open');"><i class="material-icons">menu</i></a>
+                </li>
+                <li>
+                    <a href="{% url 'home:home' %}" class="brand-logo">Zhe</a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+</div>
+
+<script>
+  $(document).ready(function(){
+    $(".dropdown-trigger").dropdown();
+  });
+</script>
